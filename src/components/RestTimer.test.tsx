@@ -7,6 +7,7 @@ vi.mock('../timer-utils', () => ({
   formatSeconds: (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`,
   startCountdown: vi.fn((_duration: number, onTick: (r: number) => void, onDone: () => void) => {
     onTick(30)
+    void onDone // keep signature; not used in this mock
     return () => {}
   }),
 }))

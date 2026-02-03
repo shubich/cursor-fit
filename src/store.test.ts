@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { useStore, getLevelSetsCount, createEmptyStrengthLevel, createEmptyCardioLevel } from './store'
-import type { StrengthLevel, CardioLevel } from './types'
 
 function resetStore() {
   useStore.setState({
