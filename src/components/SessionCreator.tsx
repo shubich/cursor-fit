@@ -1,9 +1,104 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core'
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+  sortableKeyboardCoordinates,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { useStore } from '../store'
 import { Button } from './ui'
 import type { SessionExercise } from '../types'
 import type { Exercise } from '../types'
+
+interface SortableSessionItemProps {
+  entry: SessionExercise
+  exercise: Exercise
+  onSetLevel: (exerciseId: string, level: number) => void
+  onRemove: (exercise: Exercise) => void
+}
+
+function SortableSessionItem({
+  entry,
+  exercise,
+  onSetLevel,
+  onRemove,
+}: SortableSessionItemProps) {
+  const { t } = useTranslation()
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: entry.exerciseId })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
+
+  return (
+    <li
+      ref={setNodeRef}
+      style={style}
+      className={`flex items-center gap-2 rounded-lg border p-3 ${
+        isDragging
+          ? 'border-slate-400 bg-slate-100 opacity-90 dark:border-slate-500 dark:bg-slate-700'
+          : 'border-emerald-500 bg-emerald-50 dark:border-emerald-600 dark:bg-emerald-900/20'
+      }`}
+    >
+      <button
+        type="button"
+        className="touch-none cursor-grab rounded p-1 text-slate-500 hover:bg-slate-200 hover:text-slate-700 active:cursor-grabbing dark:hover:bg-slate-600 dark:hover:text-slate-300"
+        aria-label={t('sessionCreator.dragToReorder')}
+        {...attributes}
+        {...listeners}
+      >
+        <span className="inline-block text-lg" aria-hidden>
+          ≡
+        </span>
+      </button>
+      <span className="min-w-0 flex-1 font-medium text-slate-900 dark:text-white">
+        {exercise.name}
+      </span>
+      <label className="flex shrink-0 items-center gap-2">
+        <span className="text-xs text-slate-500">{t('common.level')}:</span>
+        <select
+          value={entry.level}
+          onChange={(e) => onSetLevel(exercise.id, Number(e.target.value))}
+          className="rounded border border-slate-300 px-2 py-1 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+        >
+          {exercise.levels.map((l) => (
+            <option key={l.level} value={l.level}>
+              {l.level}
+            </option>
+          ))}
+        </select>
+      </label>
+      <Button
+        variant="secondary"
+        type="button"
+        onClick={() => onRemove(exercise)}
+        className="shrink-0"
+      >
+        {t('common.remove')}
+      </Button>
+    </li>
+  )
+}
 
 export function SessionCreator() {
   const { t } = useTranslation()
@@ -20,6 +115,11 @@ export function SessionCreator() {
   const [name, setName] = useState('')
   const [restBetweenExercises, setRestBetweenExercises] = useState(60)
   const [selected, setSelected] = useState<SessionExercise[]>([])
+
+  const activeSensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  )
 
   useEffect(() => {
     if (existing) {
@@ -46,6 +146,17 @@ export function SessionCreator() {
     setSelected((prev) =>
       prev.map((e) => (e.exerciseId === exerciseId ? { ...e, level } : e))
     )
+  }
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+    if (over == null || active.id === over.id) return
+    setSelected((prev) => {
+      const oldIndex = prev.findIndex((e) => e.exerciseId === active.id)
+      const newIndex = prev.findIndex((e) => e.exerciseId === over.id)
+      if (oldIndex === -1 || newIndex === -1) return prev
+      return arrayMove(prev, oldIndex, newIndex)
+    })
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -101,50 +212,67 @@ export function SessionCreator() {
 
         <div>
           <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-            {t('sessionCreator.selectExercises')}
+            {t('sessionCreator.sessionOrder')}
           </span>
-          <ul className="mt-2 flex flex-col gap-2">
-            {exercises.map((ex) => {
-              const entry = selected.find((e) => e.exerciseId === ex.id)
-              const isSelected = !!entry
-              return (
-                <li
-                  key={ex.id}
-                  className={`rounded-lg border p-3 ${
-                    isSelected
-                      ? 'border-emerald-500 bg-emerald-50 dark:border-emerald-600 dark:bg-emerald-900/20'
-                      : 'border-slate-200 dark:border-slate-700 dark:bg-slate-800'
-                  }`}
-                >
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() => toggleExercise(ex)}
-                      className="rounded"
-                    />
-                    <span className="font-medium text-slate-900 dark:text-white">{ex.name}</span>
-                  </label>
-                  {isSelected && (
-                    <label className="mt-2 flex items-center gap-2">
-                      <span className="text-xs text-slate-500">{t('common.level')}:</span>
-                      <select
-                        value={entry.level}
-                        onChange={(e) => setLevel(ex.id, Number(e.target.value))}
-                        className="rounded border border-slate-300 px-2 py-1 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white"
-                      >
-                        {ex.levels.map((l) => (
-                          <option key={l.level} value={l.level}>
-                            {l.level}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                  )}
-                </li>
-              )
-            })}
-          </ul>
+          <p className="mt-0.5 text-xs text-slate-500">
+            {t('sessionCreator.dragToReorder')}
+          </p>
+          {selected.length === 0 ? (
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+              {t('sessionCreator.noExercisesYet')}
+            </p>
+          ) : (
+            <DndContext
+              sensors={activeSensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={selected.map((e) => e.exerciseId)}
+                strategy={verticalListSortingStrategy}
+              >
+                <ul className="mt-2 flex flex-col gap-2">
+                  {selected.map((entry) => {
+                    const exercise = exercises.find((e) => e.id === entry.exerciseId)
+                    if (!exercise) return null
+                    return (
+                      <SortableSessionItem
+                        key={entry.exerciseId}
+                        entry={entry}
+                        exercise={exercise}
+                        onSetLevel={setLevel}
+                        onRemove={toggleExercise}
+                      />
+                    )
+                  })}
+                </ul>
+              </SortableContext>
+            </DndContext>
+          )}
+          <label className="mt-3 block">
+            <span className="sr-only">{t('sessionCreator.addExercise')}</span>
+            <select
+              value=""
+              onChange={(e) => {
+                const id = e.target.value
+                if (!id) return
+                const ex = exercises.find((x) => x.id === id)
+                if (ex) toggleExercise(ex)
+                e.target.value = ''
+              }}
+              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+              aria-label={t('sessionCreator.addExercise')}
+            >
+              <option value="">{t('sessionCreator.addExercise')}…</option>
+              {exercises
+                .filter((ex) => !selected.some((e) => e.exerciseId === ex.id))
+                .map((ex) => (
+                  <option key={ex.id} value={ex.id}>
+                    {ex.name}
+                  </option>
+                ))}
+            </select>
+          </label>
         </div>
 
         <div className="flex gap-3">

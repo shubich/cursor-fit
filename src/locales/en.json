@@ -59,7 +59,10 @@
     "sessionName": "Session name",
     "sessionNamePlaceholder": "e.g. Full body",
     "restBetweenExercises": "Rest between exercises (seconds)",
-    "selectExercises": "Select exercises and set level for each"
+    "sessionOrder": "Exercises",
+    "dragToReorder": "Drag to reorder",
+    "addExercise": "Add exercise",
+    "noExercisesYet": "No exercises yet. Add one below."
   },
   "workout": {
     "noActiveWorkout": "No active workout.",

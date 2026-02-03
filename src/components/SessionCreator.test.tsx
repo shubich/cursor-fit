@@ -38,11 +38,46 @@ describe('SessionCreator', () => {
     const user = userEvent.setup()
     render(<SessionCreator />)
     await user.type(screen.getByLabelText(/session name/i), 'My Session')
-    await user.click(screen.getByRole('checkbox', { name: /push-ups/i }))
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: /add exercise/i }),
+      screen.getByRole('option', { name: /push-ups/i })
+    )
     await user.click(screen.getByRole('button', { name: /create/i }))
     expect(useStore.getState().sessions).toHaveLength(1)
     expect(useStore.getState().sessions[0].name).toBe('My Session')
     expect(useStore.getState().sessions[0].exercises).toHaveLength(1)
     expect(useStore.getState().screen).toBe('sessions')
+  })
+
+  it('persists session exercise order when two exercises selected', async () => {
+    useStore.getState().addExercise({
+      name: 'Squats',
+      restBetweenSets: 60,
+      isCardio: false,
+      levels: [{ level: 1, sets: [{ reps: 10, weight: 'bodyweight' }] }],
+    })
+    const exercises = useStore.getState().exercises
+    const pushUps = exercises.find((e) => e.name === 'Push-ups')!
+    const squats = exercises.find((e) => e.name === 'Squats')!
+
+    useStore.getState().setScreen('session-create')
+    const user = userEvent.setup()
+    render(<SessionCreator />)
+    await user.type(screen.getByLabelText(/session name/i), 'Ordered Session')
+    // Add in order: Push-ups first, then Squats
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: /add exercise/i }),
+      screen.getByRole('option', { name: /push-ups/i })
+    )
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: /add exercise/i }),
+      screen.getByRole('option', { name: /squats/i })
+    )
+    await user.click(screen.getByRole('button', { name: /create/i }))
+
+    const session = useStore.getState().sessions[0]
+    expect(session.exercises).toHaveLength(2)
+    expect(session.exercises[0].exerciseId).toBe(pushUps.id)
+    expect(session.exercises[1].exerciseId).toBe(squats.id)
   })
 })

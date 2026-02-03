@@ -59,7 +59,10 @@
     "sessionName": "Название тренировки",
     "sessionNamePlaceholder": "напр. Всё тело",
     "restBetweenExercises": "Отдых между упражнениями (секунды)",
-    "selectExercises": "Выберите упражнения и уровень для каждого"
+    "sessionOrder": "Упражнения",
+    "dragToReorder": "Перетащите для изменения порядка",
+    "addExercise": "Добавить упражнение",
+    "noExercisesYet": "Пока нет упражнений. Добавьте ниже."
   },
   "workout": {
     "noActiveWorkout": "Нет активной тренировки.",
