@@ -73,6 +73,7 @@ interface AppActions {
   advanceToNextExercise: () => void
   restComplete: () => void
   finishWorkout: () => void
+  quitWorkout: () => void
   clearLastResult: () => void
 }
 
@@ -340,6 +341,7 @@ export const useStore = create<Store>((set, get) => ({
     })
   },
 
+  quitWorkout: () => set({ activeWorkout: null, screen: 'home' }),
   clearLastResult: () => set({ lastResult: null }),
 }))
 
