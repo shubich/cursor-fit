@@ -16,6 +16,18 @@ npm run build
 npm run preview
 ```
 
+## Deploy (GitHub Pages)
+
+Every push to `main` builds and deploys to GitHub Pages via the [Deploy to GitHub Pages](.github/workflows/deploy.yml) workflow.
+
+**One-time setup:**
+
+1. In the repo: **Settings → Pages → Build and deployment**
+2. Set **Source** to **GitHub Actions**.
+3. If your repo name is not `cursor-fit`, set the `VITE_BASE_PATH` env in `.github/workflows/deploy.yml` to `/<your-repo-name>/`.
+
+The app will be available at `https://<username>.github.io/cursor-fit/` (or your repo URL).
+
 ## Features
 
 - **Exercises**: Create strength (reps + weight per level) or cardio (duration per level). Set sets, rest between sets, and 1–10 levels.
