@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react'
 import { startCountdown, formatSeconds } from '../timer-utils'
 import { playBeep } from '../sound'
+import { Button } from './ui'
 
 interface RestTimerProps {
-  /** When rest ends (timestamp). If null, show "Next" button only (no countdown). */
   restEndsAt: number | null
-  /** Rest duration in seconds (for starting countdown). */
   restSeconds: number
   isRestBetweenExercises: boolean
   onRestComplete: () => void
-  /** Label when between exercises. */
   nextLabel?: string
 }
 
@@ -52,47 +50,53 @@ export function RestTimer({
 
   if (restEndsAt == null && restSeconds === 0) {
     return (
-      <div className="rounded-xl bg-amber-100 dark:bg-amber-900/30 p-4 text-center">
+      <div className="rounded-xl bg-amber-100 p-4 text-center dark:bg-amber-900/30">
         <p className="text-lg font-medium text-amber-800 dark:text-amber-200">
           {isRestBetweenExercises ? nextLabel : 'Next set'}
         </p>
-        <button
-          type="button"
+        <Button
+          variant="primary"
+          size="lg"
+          fullWidth
+          className="mt-3 !bg-amber-500 !hover:bg-amber-600"
           onClick={onRestComplete}
-          className="mt-3 w-full rounded-lg bg-amber-500 px-4 py-3 font-semibold text-white shadow hover:bg-amber-600"
         >
           {isRestBetweenExercises ? nextLabel : 'Start next set'}
-        </button>
+        </Button>
       </div>
     )
   }
 
   if (remaining != null && remaining <= 0) {
     return (
-      <div className="rounded-xl bg-green-100 dark:bg-green-900/30 p-4 text-center">
+      <div className="rounded-xl bg-green-100 p-4 text-center dark:bg-green-900/30">
         <p className="text-lg font-semibold text-green-800 dark:text-green-200">
           Start next {isRestBetweenExercises ? 'exercise' : 'set'}!
         </p>
-        <button
-          type="button"
+        <Button
+          variant="primary"
+          size="lg"
+          fullWidth
+          className="mt-3 !bg-green-600 !hover:bg-green-700"
           onClick={onRestComplete}
-          className="mt-3 w-full rounded-lg bg-green-600 px-4 py-3 font-semibold text-white hover:bg-green-700"
         >
           Continue
-        </button>
+        </Button>
       </div>
     )
   }
 
   return (
-    <div className="rounded-xl bg-slate-200 dark:bg-slate-700 p-6 text-center">
+    <div className="rounded-xl bg-slate-200 p-6 text-center dark:bg-slate-700">
       <p className="text-sm font-medium text-slate-600 dark:text-slate-300">
         {isRestBetweenExercises ? 'Rest before next exercise' : 'Rest'}
       </p>
       <p className="mt-2 text-5xl font-bold tabular-nums text-slate-900 dark:text-white">
         {remaining != null ? formatSeconds(remaining) : '--:--'}
       </p>
-      <p className="mt-1 text-xs text-slate-500">Stay on this screen or switch tabs — timer stays accurate</p>
+      <p className="mt-1 text-xs text-slate-500">
+        Stay on this screen or switch tabs — timer stays accurate
+      </p>
     </div>
   )
 }

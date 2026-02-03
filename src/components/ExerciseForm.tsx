@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useStore } from '../store'
 import { createEmptyStrengthLevel, createEmptyCardioLevel } from '../store'
+import { Button, Card } from './ui'
 import type { StrengthLevel, CardioLevel, StrengthSet, CardioSet } from '../types'
 
 export function ExerciseForm() {
@@ -205,10 +206,7 @@ export function ExerciseForm() {
         <div className="space-y-4">
           <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Levels (each level has its own sets)</span>
           {levels.slice(0, levelCount).map((l, levelIdx) => (
-            <div
-              key={levelIdx}
-              className="rounded-lg border border-slate-200 p-4 dark:border-slate-700 dark:bg-slate-800"
-            >
+            <Card key={levelIdx} className="p-4">
               <p className="mb-3 text-sm font-medium text-slate-600 dark:text-slate-400">
                 Level {l.level} — {l.sets.length} set(s)
               </p>
@@ -281,42 +279,36 @@ export function ExerciseForm() {
                         </label>
                       </>
                     )}
-                    <button
-                      type="button"
+                    <Button
+                      variant="danger"
+                      size="sm"
                       onClick={() => removeSetFromLevel(levelIdx, setIdx)}
                       disabled={l.sets.length <= 1}
-                      className="rounded border border-red-300 px-2 py-1 text-xs text-red-600 disabled:opacity-40 dark:border-red-700 dark:text-red-400"
                     >
                       Remove
-                    </button>
+                    </Button>
                   </div>
                 ))}
               </div>
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="sm"
+                className="mt-2"
                 onClick={() => addSetToLevel(levelIdx)}
-                className="mt-2 rounded border border-slate-300 px-2 py-1 text-sm dark:border-slate-600"
               >
                 + Add set
-              </button>
-            </div>
+              </Button>
+            </Card>
           ))}
         </div>
 
         <div className="flex gap-3">
-          <button
-            type="button"
-            onClick={() => setScreen('exercises')}
-            className="rounded-lg border border-slate-300 px-4 py-2 dark:border-slate-600"
-          >
+          <Button variant="secondary" type="button" onClick={() => setScreen('exercises')}>
             Cancel
-          </button>
-          <button
-            type="submit"
-            className="rounded-lg bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-700"
-          >
+          </Button>
+          <Button variant="primary" type="submit">
             {isEdit ? 'Save' : 'Create'}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

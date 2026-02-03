@@ -1,4 +1,5 @@
 import { useStore } from '../store'
+import { Button } from './ui'
 
 export function Home() {
   const setScreen = useStore((s) => s.setScreen)
@@ -11,20 +12,12 @@ export function Home() {
       </p>
 
       <div className="flex flex-col gap-3">
-        <button
-          type="button"
-          onClick={() => setScreen('exercises')}
-          className="w-full rounded-xl border-2 border-slate-200 bg-white py-4 text-left pl-4 font-medium text-slate-900 shadow-sm hover:border-emerald-400 hover:bg-emerald-50 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:border-emerald-500 dark:hover:bg-emerald-900/20"
-        >
+        <Button variant="nav" onClick={() => setScreen('exercises')}>
           Exercises
-        </button>
-        <button
-          type="button"
-          onClick={() => setScreen('sessions')}
-          className="w-full rounded-xl border-2 border-slate-200 bg-white py-4 text-left pl-4 font-medium text-slate-900 shadow-sm hover:border-emerald-400 hover:bg-emerald-50 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:border-emerald-500 dark:hover:bg-emerald-900/20"
-        >
+        </Button>
+        <Button variant="nav" onClick={() => setScreen('sessions')}>
           Sessions
-        </button>
+        </Button>
       </div>
     </div>
   )

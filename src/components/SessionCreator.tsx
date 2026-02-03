@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useStore } from '../store'
+import { Button } from './ui'
 import type { SessionExercise } from '../types'
 import type { Exercise } from '../types'
 
@@ -145,20 +146,16 @@ export function SessionCreator() {
         </div>
 
         <div className="flex gap-3">
-          <button
-            type="button"
-            onClick={() => setScreen('sessions')}
-            className="rounded-lg border border-slate-300 px-4 py-2 dark:border-slate-600"
-          >
+          <Button variant="secondary" type="button" onClick={() => setScreen('sessions')}>
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="primary"
             type="submit"
             disabled={selected.length === 0}
-            className="rounded-lg bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
           >
             {isEdit ? 'Save' : 'Create'}
-          </button>
+          </Button>
         </div>
       </form>
     </div>
