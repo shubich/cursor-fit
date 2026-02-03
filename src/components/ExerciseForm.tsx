@@ -42,12 +42,28 @@ export function ExerciseForm() {
   }, [existing?.id])
 
   useEffect(() => {
-    if (existing) return
-    setLevels(
-      Array.from({ length: levelCount }, (_, i) =>
-        isCardio ? createEmptyCardioLevel(i + 1) : createEmptyStrengthLevel(i + 1)
+    if (existing) {
+      setLevels((prev) => {
+        if (levelCount > prev.length) {
+          const next = [...prev]
+          while (next.length < levelCount) {
+            const levelNum = next.length + 1
+            next.push(
+              isCardio ? createEmptyCardioLevel(levelNum) : createEmptyStrengthLevel(levelNum)
+            )
+          }
+          return next
+        }
+        if (levelCount < prev.length) return prev.slice(0, levelCount)
+        return prev
+      })
+    } else {
+      setLevels(
+        Array.from({ length: levelCount }, (_, i) =>
+          isCardio ? createEmptyCardioLevel(i + 1) : createEmptyStrengthLevel(i + 1)
+        )
       )
-    )
+    }
   }, [isCardio, levelCount])
 
   const handleSubmit = (e: React.FormEvent) => {
