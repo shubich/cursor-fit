@@ -24,6 +24,12 @@ import type { StrengthExercise, CardioExercise, StrengthLevel, CardioLevel } fro
 
 const uid = () => crypto.randomUUID?.() ?? Math.random().toString(36).slice(2, 12)
 
+/** Number of sets for this exercise at the given level (from level's sets array). */
+export function getLevelSetsCount(exercise: Exercise, level: number): number {
+  const l = exercise.levels.find((x) => x.level === level)
+  return l ? l.sets.length : 0
+}
+
 /** Cast to Exercise[] for addExercise (spread widens isCardio to boolean). */
 function asExerciseList(arr: unknown): Exercise[] {
   return arr as Exercise[]
@@ -199,8 +205,8 @@ export const useStore = create<Store>((set, get) => ({
     const ex = w.exercises[idx]
     const updated = [...w.exercises]
     updated[idx] = { ...ex, completedSets: ex.completedSets + 1 }
-    const totalSets = ex.exercise.sets
-    const isLastSet = ex.completedSets >= totalSets
+    const totalSets = getLevelSetsCount(ex.exercise, ex.level)
+    const isLastSet = ex.completedSets + 1 >= totalSets
     const isLastExercise = w.currentExerciseIndex === w.exercises.length - 1
 
     if (isLastSet && isLastExercise) {
@@ -293,27 +299,27 @@ export const useStore = create<Store>((set, get) => ({
     const completedSets: CompletedSet[] = []
     for (const { exercise, level, completedSets: count } of w.exercises) {
       const levelData = exercise.levels.find((l) => l.level === level)
-      const weight = levelData && 'weight' in levelData ? levelData.weight : 0
-      for (let i = 0; i < count; i++) {
-        const weightVal = weight ?? 0
-        if (exercise.isCardio && levelData && 'duration' in levelData) {
+      if (!levelData) continue
+      const sets = levelData.sets
+      for (let i = 0; i < count && i < sets.length; i++) {
+        const setSpec = sets[i]
+        if (exercise.isCardio && 'duration' in setSpec) {
           completedSets.push({
             exerciseId: exercise.id,
             exerciseName: exercise.name,
             setIndex: i + 1,
             level,
-            duration: levelData.duration,
-            weight: (levelData as CardioLevel).weight ?? 0,
+            duration: setSpec.duration,
+            weight: setSpec.weight ?? 'bodyweight',
           })
-        } else {
-          const reps = levelData && 'reps' in levelData ? levelData.reps : 0
+        } else if ('reps' in setSpec) {
           completedSets.push({
             exerciseId: exercise.id,
             exerciseName: exercise.name,
             setIndex: i + 1,
             level,
-            reps,
-            weight: weightVal,
+            reps: setSpec.reps,
+            weight: setSpec.weight,
           })
         }
       }
@@ -336,11 +342,24 @@ export const useStore = create<Store>((set, get) => ({
   clearLastResult: () => set({ lastResult: null }),
 }))
 
-// Helpers for forms (create default level)
+// Helpers for forms (create default level with 3 sets)
+const DEFAULT_SETS_COUNT = 3
+
 export function createEmptyStrengthLevel(level: number): StrengthLevel {
-  return { level, reps: 10, weight: 0 }
+  return {
+    level,
+    sets: Array.from({ length: DEFAULT_SETS_COUNT }, () => ({
+      reps: 8,
+      weight: 'bodyweight' as const,
+    })),
+  }
 }
 
 export function createEmptyCardioLevel(level: number): CardioLevel {
-  return { level, duration: 60 }
+  return {
+    level,
+    sets: Array.from({ length: DEFAULT_SETS_COUNT }, () => ({
+      duration: 60,
+    })),
+  }
 }

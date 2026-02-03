@@ -49,7 +49,7 @@ export function ExerciseList() {
                 <div>
                   <h2 className="font-semibold text-slate-900 dark:text-white">{ex.name}</h2>
                   <p className="text-sm text-slate-500 dark:text-slate-400">
-                    {ex.isCardio ? 'Cardio' : 'Strength'} · {ex.sets} sets · rest {ex.restBetweenSets}s
+                    {ex.isCardio ? 'Cardio' : 'Strength'} · {ex.levels.length} level(s) · rest {ex.restBetweenSets}s
                   </p>
                 </div>
                 <div className="flex gap-2">

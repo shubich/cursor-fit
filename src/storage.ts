@@ -2,7 +2,16 @@
  * localStorage helpers: key structure and serialization for exercises and session history.
  */
 
-import type { Exercise, Session, WorkoutResult } from './types'
+import type {
+  Exercise,
+  Session,
+  WorkoutResult,
+  StrengthLevel,
+  CardioLevel,
+  StrengthSet,
+  CardioSet,
+} from './types'
+type Weight = number | string
 
 const PREFIX = 'cursor-fit'
 
@@ -30,10 +39,37 @@ function safeSet(key: string, value: unknown): void {
   }
 }
 
+/** Migrate old level shape (reps/weight or duration per level) to new (sets array). */
+function migrateExercise(ex: unknown): Exercise {
+  const raw = ex as Record<string, unknown>
+  if (!raw || typeof raw !== 'object' || !Array.isArray(raw.levels)) return ex as Exercise
+  const levels = raw.levels.map((l: unknown) => {
+    const lev = l as Record<string, unknown>
+    const levelNum = typeof lev.level === 'number' ? lev.level : 1
+    if ('sets' in lev && Array.isArray(lev.sets)) return l as StrengthLevel | CardioLevel
+    if ('duration' in lev && typeof lev.duration === 'number') {
+      const weight: CardioSet['weight'] = lev.weight !== undefined ? (lev.weight as Weight) : undefined
+      return {
+        level: levelNum,
+        sets: [{ duration: lev.duration as number, weight }],
+      } as CardioLevel
+    }
+    const reps = typeof lev.reps === 'number' ? lev.reps : 8
+    const weight: StrengthSet['weight'] = lev.weight !== undefined ? lev.weight as StrengthSet['weight'] : 'bodyweight'
+    return {
+      level: levelNum,
+      sets: [{ reps, weight }],
+    } as StrengthLevel
+  })
+  const { sets: _s, ...rest } = raw
+  return { ...rest, levels } as Exercise
+}
+
 // --- Exercises ---
 
 export function loadExercises(): Exercise[] {
-  return safeParse<Exercise[]>(STORAGE_KEYS.exercises, [])
+  const raw = safeParse<unknown[]>(STORAGE_KEYS.exercises, [])
+  return raw.map(migrateExercise) as Exercise[]
 }
 
 export function saveExercises(exercises: Exercise[]): void {

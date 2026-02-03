@@ -2,18 +2,31 @@
  * Core TypeScript interfaces for the fitness app.
  */
 
-/** Strength exercise level: reps + optional weight (0 = bodyweight). */
-export interface StrengthLevel {
-  level: number
+/** Weight: number (kg/lbs) or string descriptor (e.g. "bodyweight", "BW+5kg"). */
+export type Weight = number | string
+
+/** One set in a strength level: reps + weight per set. */
+export interface StrengthSet {
   reps: number
-  weight: number
+  weight: Weight
 }
 
-/** Cardio exercise level: duration in seconds + optional weight. */
+/** One set in a cardio level: duration (seconds) + optional weight. */
+export interface CardioSet {
+  duration: number
+  weight?: Weight
+}
+
+/** Strength exercise level: array of sets, each with its own reps and weight. */
+export interface StrengthLevel {
+  level: number
+  sets: StrengthSet[]
+}
+
+/** Cardio exercise level: array of sets, each with duration and optional weight. */
 export interface CardioLevel {
   level: number
-  duration: number // seconds
-  weight?: number
+  sets: CardioSet[]
 }
 
 export type ExerciseLevel = StrengthLevel | CardioLevel
@@ -22,18 +35,17 @@ export type ExerciseLevel = StrengthLevel | CardioLevel
 export interface ExerciseBase {
   id: string
   name: string
-  sets: number
   restBetweenSets: number // seconds
   isCardio: boolean
 }
 
-/** Strength exercise: has levels with reps and weight. */
+/** Strength exercise: has levels, each with its own array of sets. */
 export interface StrengthExercise extends ExerciseBase {
   isCardio: false
   levels: StrengthLevel[]
 }
 
-/** Cardio exercise: has levels with duration (and optional weight). */
+/** Cardio exercise: has levels, each with its own array of sets. */
 export interface CardioExercise extends ExerciseBase {
   isCardio: true
   levels: CardioLevel[]
@@ -69,9 +81,8 @@ export interface ActiveWorkout {
   currentExerciseIndex: number
   currentSet: number
   isResting: boolean
-  restEndsAt: number | null // timestamp when rest ends (for accurate background timer)
+  restEndsAt: number | null
   isRestBetweenExercises: boolean
-  /** Seconds of rest between exercises (from session); 0 for single-exercise workout. */
   restBetweenExercises: number
 }
 
@@ -83,7 +94,7 @@ export interface CompletedSet {
   level: number
   reps?: number
   duration?: number
-  weight: number
+  weight: Weight
 }
 
 /** Result of a finished workout. */

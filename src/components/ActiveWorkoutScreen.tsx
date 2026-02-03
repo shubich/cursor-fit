@@ -1,18 +1,25 @@
-import { useStore } from '../store'
+import { useStore, getLevelSetsCount } from '../store'
 import { formatSeconds } from '../timer-utils'
 import { RestTimer } from './RestTimer'
 import type { Exercise } from '../types'
 
-function getLevelInfo(exercise: Exercise, level: number) {
+/** Get the current set's target (reps or duration) and weight from the level's sets array. */
+function getCurrentSetInfo(exercise: Exercise, level: number, setIndex: number) {
   const l = exercise.levels.find((x) => x.level === level)
-  if (!l) return { reps: null, duration: null, weight: 0 }
-  if (exercise.isCardio && 'duration' in l) {
-    return { reps: null, duration: l.duration, weight: l.weight ?? 0 }
+  if (!l) return { reps: null, duration: null, weight: 'bodyweight' as const }
+  const setSpec = l.sets[setIndex - 1]
+  if (!setSpec) return { reps: null, duration: null, weight: 'bodyweight' as const }
+  if (exercise.isCardio && 'duration' in setSpec) {
+    return {
+      reps: null,
+      duration: setSpec.duration,
+      weight: setSpec.weight ?? 'bodyweight',
+    }
   }
-  if ('reps' in l) {
-    return { reps: l.reps, duration: null, weight: l.weight ?? 0 }
+  if ('reps' in setSpec) {
+    return { reps: setSpec.reps, duration: null, weight: setSpec.weight }
   }
-  return { reps: null, duration: null, weight: 0 }
+  return { reps: null, duration: null, weight: 'bodyweight' as const }
 }
 
 export function ActiveWorkoutScreen() {
@@ -30,8 +37,8 @@ export function ActiveWorkoutScreen() {
 
   const current = activeWorkout.exercises[activeWorkout.currentExerciseIndex]
   const { exercise, level, completedSets } = current
-  const totalSets = exercise.sets
-  const levelInfo = getLevelInfo(exercise, level)
+  const totalSets = getLevelSetsCount(exercise, level)
+  const levelInfo = getCurrentSetInfo(exercise, level, activeWorkout.currentSet)
   const isSession = activeWorkout.exercises.length > 1
 
   const handleRestComplete = () => restComplete()
@@ -111,8 +118,10 @@ export function ActiveWorkoutScreen() {
             </p>
           </>
         )}
-        {levelInfo.weight > 0 && (
-          <p className="mt-2 text-slate-600 dark:text-slate-400">Weight: {levelInfo.weight} kg</p>
+        {(levelInfo.weight !== undefined && levelInfo.weight !== 'bodyweight') && (
+          <p className="mt-2 text-slate-600 dark:text-slate-400">
+            Weight: {typeof levelInfo.weight === 'number' ? `${levelInfo.weight} kg` : levelInfo.weight}
+          </p>
         )}
       </div>
 

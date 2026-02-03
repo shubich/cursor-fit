@@ -61,7 +61,9 @@ export function ResultsScreen() {
                     Set {s.setIndex}:{' '}
                     {s.reps != null ? `${s.reps} reps` : ''}
                     {s.duration != null ? `${formatSeconds(s.duration)}` : ''}
-                    {s.weight > 0 ? ` · ${s.weight} kg` : ''}
+                    {s.weight !== undefined && s.weight !== 'bodyweight'
+                      ? ` · ${typeof s.weight === 'number' ? `${s.weight} kg` : s.weight}`
+                      : ''}
                   </li>
                 ))}
               </ul>
