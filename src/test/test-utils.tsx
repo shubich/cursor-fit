@@ -16,6 +16,7 @@ export function resetStore() {
   })
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function AllTheProviders({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }
@@ -27,5 +28,6 @@ function customRender(ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>
   })
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export * from '@testing-library/react'
 export { customRender as render }

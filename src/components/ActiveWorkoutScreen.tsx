@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useStore, getLevelSetsCount } from '../store'
-import { formatSeconds } from '../timer-utils'
+import { formatSeconds, startCountdown } from '../timer-utils'
+import { playBeep } from '../sound'
 import { RestTimer } from './RestTimer'
 import { Button, Modal } from './ui'
 import type { Exercise } from '../types'
@@ -30,6 +31,18 @@ export function ActiveWorkoutScreen() {
   const restComplete = useStore((s) => s.restComplete)
   const quitWorkout = useStore((s) => s.quitWorkout)
   const [showQuitConfirm, setShowQuitConfirm] = useState(false)
+  const [cardioRemaining, setCardioRemaining] = useState<number | null>(null)
+  const cardioCountdownCleanup = useRef<(() => void) | null>(null)
+
+  useEffect(() => {
+    if (!activeWorkout) return
+    cardioCountdownCleanup.current?.()
+    cardioCountdownCleanup.current = null
+    const id = requestAnimationFrame(() => setCardioRemaining(null))
+    return () => cancelAnimationFrame(id)
+    // Only reset when current set or exercise changes, not on every store update
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeWorkout?.currentExerciseIndex, activeWorkout?.currentSet])
 
   if (!activeWorkout) {
     return (
@@ -50,6 +63,27 @@ export function ActiveWorkoutScreen() {
   const handleQuitConfirm = () => {
     setShowQuitConfirm(false)
     quitWorkout()
+  }
+
+  const handleCardioStartSet = () => {
+    const duration = levelInfo.duration ?? 0
+    setCardioRemaining(duration)
+    cardioCountdownCleanup.current = startCountdown(
+      duration,
+      setCardioRemaining,
+      () => {
+        playBeep()
+        cardioCountdownCleanup.current = null
+        completeSet()
+      }
+    )
+  }
+
+  const handleCardioCompleteEarly = () => {
+    cardioCountdownCleanup.current?.()
+    cardioCountdownCleanup.current = null
+    setCardioRemaining(null)
+    completeSet()
   }
 
   if (activeWorkout.isResting) {
@@ -137,12 +171,21 @@ export function ActiveWorkoutScreen() {
 
         <div className="rounded-xl bg-slate-100 p-6 text-center dark:bg-slate-800">
           {exercise.isCardio ? (
-            <>
-              <p className="text-slate-600 dark:text-slate-400">Duration</p>
-              <p className="text-3xl font-bold text-slate-900 dark:text-white">
-                {levelInfo.duration != null ? formatSeconds(levelInfo.duration) : '—'}
-              </p>
-            </>
+            cardioRemaining === null ? (
+              <>
+                <p className="text-slate-600 dark:text-slate-400">Duration</p>
+                <p className="text-3xl font-bold text-slate-900 dark:text-white">
+                  {levelInfo.duration != null ? formatSeconds(levelInfo.duration) : '—'}
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-slate-600 dark:text-slate-400">Time remaining</p>
+                <p className="text-3xl font-bold tabular-nums text-slate-900 dark:text-white">
+                  {formatSeconds(cardioRemaining)}
+                </p>
+              </>
+            )
           ) : (
             <>
               <p className="text-slate-600 dark:text-slate-400">Target reps</p>
@@ -162,15 +205,44 @@ export function ActiveWorkoutScreen() {
           Rest after this set: {formatSeconds(exercise.restBetweenSets)}
         </p>
 
-        <Button
-          variant="primary"
-          size="lg"
-          fullWidth
-          className="mt-auto active:scale-[0.98]"
-          onClick={completeSet}
-        >
-          Complete set
-        </Button>
+        {exercise.isCardio ? (
+          cardioRemaining === null ? (
+            <div className="mt-auto flex flex-col gap-2">
+              <Button
+                variant="primary"
+                size="lg"
+                fullWidth
+                className="active:scale-[0.98]"
+                onClick={handleCardioStartSet}
+              >
+                Start set
+              </Button>
+              <Button variant="secondary" size="md" fullWidth onClick={handleCardioCompleteEarly}>
+                Complete set
+              </Button>
+            </div>
+          ) : (
+            <Button
+              variant="secondary"
+              size="lg"
+              fullWidth
+              className="mt-auto active:scale-[0.98]"
+              onClick={handleCardioCompleteEarly}
+            >
+              Complete early
+            </Button>
+          )
+        ) : (
+          <Button
+            variant="primary"
+            size="lg"
+            fullWidth
+            className="mt-auto active:scale-[0.98]"
+            onClick={completeSet}
+          >
+            Complete set
+          </Button>
+        )}
       </div>
       <Modal
         open={showQuitConfirm}
