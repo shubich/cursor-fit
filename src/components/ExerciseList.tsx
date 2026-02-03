@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useStore } from '../store'
 import type { Exercise } from '../types'
 
@@ -8,14 +9,18 @@ export function ExerciseList() {
   const deleteExercise = useStore((s) => s.deleteExercise)
   const startSingleExerciseWorkout = useStore((s) => s.startSingleExerciseWorkout)
 
+  const [levelByExerciseId, setLevelByExerciseId] = useState<Record<string, number>>({})
+
   const handleEdit = (id: string) => {
     setEditingExerciseId(id)
     setScreen('exercise-edit')
   }
 
+  const getSelectedLevel = (ex: Exercise) =>
+    levelByExerciseId[ex.id] ?? ex.levels[0]?.level ?? 1
+
   const handleStartWorkout = (ex: Exercise) => {
-    const level = ex.levels[0]?.level ?? 1
-    startSingleExerciseWorkout(ex.id, level)
+    startSingleExerciseWorkout(ex.id, getSelectedLevel(ex))
   }
 
   return (
@@ -69,13 +74,34 @@ export function ExerciseList() {
                   </button>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={() => handleStartWorkout(ex)}
-                className="w-full rounded-lg bg-slate-900 py-2 font-medium text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
-              >
-                Start workout
-              </button>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+                <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                  <span>Level:</span>
+                  <select
+                    value={getSelectedLevel(ex)}
+                    onChange={(e) =>
+                      setLevelByExerciseId((prev) => ({
+                        ...prev,
+                        [ex.id]: Number(e.target.value),
+                      }))
+                    }
+                    className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+                  >
+                    {ex.levels.map((l) => (
+                      <option key={l.level} value={l.level}>
+                        {l.level}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <button
+                  type="button"
+                  onClick={() => handleStartWorkout(ex)}
+                  className="w-full rounded-lg bg-slate-900 py-2 font-medium text-white hover:bg-slate-800 sm:w-auto sm:flex-1 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
+                >
+                  Start workout
+                </button>
+              </div>
             </li>
           ))}
         </ul>
