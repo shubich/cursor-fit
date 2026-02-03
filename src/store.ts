@@ -210,6 +210,7 @@ export const useStore = create<Store>((set, get) => ({
     const isLastExercise = w.currentExerciseIndex === w.exercises.length - 1
 
     if (isLastSet && isLastExercise) {
+      set({ activeWorkout: { ...w, exercises: updated } })
       get().finishWorkout()
       return
     }
