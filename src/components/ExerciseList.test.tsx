@@ -46,6 +46,7 @@ describe('ExerciseList', () => {
     const id = useStore.getState().exercises[0].id
     const user = userEvent.setup()
     render(<ExerciseList />)
+    await user.click(screen.getByRole('button', { name: /expand push-ups/i }))
     await user.click(screen.getByRole('button', { name: /edit/i }))
     expect(useStore.getState().screen).toBe('exercise-edit')
     expect(useStore.getState().editingExerciseId).toBe(id)
@@ -60,6 +61,7 @@ describe('ExerciseList', () => {
     })
     const user = userEvent.setup()
     render(<ExerciseList />)
+    await user.click(screen.getByRole('button', { name: /expand push-ups/i }))
     await user.click(screen.getByRole('button', { name: /delete/i }))
     expect(useStore.getState().exercises).toHaveLength(0)
   })
@@ -76,6 +78,7 @@ describe('ExerciseList', () => {
     })
     const user = userEvent.setup()
     render(<ExerciseList />)
+    await user.click(screen.getByRole('button', { name: /expand push-ups/i }))
     const levelSelect = screen.getByRole('combobox', { name: /level/i })
     await user.selectOptions(levelSelect, '2')
     await user.click(screen.getByRole('button', { name: /start workout/i }))

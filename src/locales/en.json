@@ -9,6 +9,8 @@
     "edit": "Edit",
     "add": "Add",
     "remove": "Remove",
+    "expand": "Expand",
+    "collapse": "Collapse",
     "name": "Name",
     "level": "Level",
     "weight": "Weight",
