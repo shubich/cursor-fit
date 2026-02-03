@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
-import { render, screen, resetStore, waitFor } from '../test/test-utils'
+import { render, screen, resetStore, waitFor, fireEvent } from '../test/test-utils'
 import { ActiveWorkoutScreen } from './ActiveWorkoutScreen'
 import { useStore } from '../store'
 
@@ -141,10 +141,15 @@ describe('ActiveWorkoutScreen', () => {
       const user = userEvent.setup()
       render(<ActiveWorkoutScreen />)
       await user.click(screen.getByRole('button', { name: /start set/i }))
-      await user.click(screen.getByRole('button', { name: /complete early/i }))
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /skip rest/i })).toBeInTheDocument()
+        expect(screen.getByRole('button', { name: /complete early/i })).toBeInTheDocument()
       })
+      const completeEarlyBtn = screen.getByRole('button', { name: /complete early/i })
+      fireEvent.click(completeEarlyBtn)
+      await waitFor(() => {
+        expect(useStore.getState().activeWorkout?.isResting).toBe(true)
+      })
+      expect(useStore.getState().activeWorkout?.exercises[0].completedSets).toBe(1)
     })
   })
 })

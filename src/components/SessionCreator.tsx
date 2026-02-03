@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useStore } from '../store'
 import { Button } from './ui'
 import type { SessionExercise } from '../types'
 import type { Exercise } from '../types'
 
 export function SessionCreator() {
+  const { t } = useTranslation()
   const exercises = useStore((s) => s.exercises)
   const sessions = useStore((s) => s.sessions)
   const editingSessionId = useStore((s) => s.editingSessionId)
@@ -68,25 +70,25 @@ export function SessionCreator() {
   return (
     <div className="flex flex-col gap-6 p-4">
       <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
-        {isEdit ? 'Edit session' : 'New session'}
+        {isEdit ? t('sessionCreator.editTitle') : t('sessionCreator.newTitle')}
       </h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <label className="block">
-          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Session name</span>
+          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('sessionCreator.sessionName')}</span>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
-            placeholder="e.g. Full body"
+            placeholder={t('sessionCreator.sessionNamePlaceholder')}
             required
           />
         </label>
 
         <label className="block">
           <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-            Rest between exercises (seconds)
+            {t('sessionCreator.restBetweenExercises')}
           </span>
           <input
             type="number"
@@ -99,7 +101,7 @@ export function SessionCreator() {
 
         <div>
           <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-            Select exercises and set level for each
+            {t('sessionCreator.selectExercises')}
           </span>
           <ul className="mt-2 flex flex-col gap-2">
             {exercises.map((ex) => {
@@ -125,7 +127,7 @@ export function SessionCreator() {
                   </label>
                   {isSelected && (
                     <label className="mt-2 flex items-center gap-2">
-                      <span className="text-xs text-slate-500">Level:</span>
+                      <span className="text-xs text-slate-500">{t('common.level')}:</span>
                       <select
                         value={entry.level}
                         onChange={(e) => setLevel(ex.id, Number(e.target.value))}
@@ -147,14 +149,14 @@ export function SessionCreator() {
 
         <div className="flex gap-3">
           <Button variant="secondary" type="button" onClick={() => setScreen('sessions')}>
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             variant="primary"
             type="submit"
             disabled={selected.length === 0}
           >
-            {isEdit ? 'Save' : 'Create'}
+            {isEdit ? t('common.save') : t('common.create')}
           </Button>
         </div>
       </form>

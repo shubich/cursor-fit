@@ -1,7 +1,9 @@
+import { useTranslation } from 'react-i18next'
 import { useStore } from '../store'
 import { Button, Card } from './ui'
 
 export function SessionList() {
+  const { t } = useTranslation()
   const sessions = useStore((s) => s.sessions)
   const exercises = useStore((s) => s.exercises)
   const setScreen = useStore((s) => s.setScreen)
@@ -17,7 +19,7 @@ export function SessionList() {
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Sessions</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t('sessions.title')}</h1>
         <Button
           variant="primary"
           onClick={() => {
@@ -25,13 +27,13 @@ export function SessionList() {
             setScreen('session-create')
           }}
         >
-          New session
+          {t('sessions.newSession')}
         </Button>
       </div>
 
       {sessions.length === 0 ? (
         <p className="rounded-xl bg-slate-100 p-6 text-center text-slate-600 dark:bg-slate-700 dark:text-slate-300">
-          No sessions yet. Create one to run multi-exercise workouts.
+          {t('sessions.noSessions')}
         </p>
       ) : (
         <ul className="flex flex-col gap-3">
@@ -47,7 +49,7 @@ export function SessionList() {
                       {session.name}
                     </h2>
                     <p className="text-sm text-slate-500 dark:text-slate-400">
-                      {session.exercises.length} exercises · rest {session.restBetweenExercises}s
+                      {session.exercises.length} {t('sessions.exercisesCount')} · {t('sessions.restBetween')} {session.restBetweenExercises}s
                     </p>
                     <p className="mt-1 truncate text-xs text-slate-400 dark:text-slate-500">
                       {names}
@@ -55,10 +57,10 @@ export function SessionList() {
                   </div>
                   <div className="flex gap-2">
                     <Button variant="secondary" size="sm" onClick={() => handleEdit(session.id)}>
-                      Edit
+                      {t('common.edit')}
                     </Button>
                     <Button variant="danger" size="sm" onClick={() => deleteSession(session.id)}>
-                      Delete
+                      {t('common.delete')}
                     </Button>
                   </div>
                 </div>
@@ -68,7 +70,7 @@ export function SessionList() {
                   fullWidth
                   onClick={() => startSessionWorkout(session.id)}
                 >
-                  Start session
+                  {t('sessions.startSession')}
                 </Button>
               </Card>
             )
@@ -77,7 +79,7 @@ export function SessionList() {
       )}
 
       <Button variant="secondary" onClick={() => setScreen('home')}>
-        Back to home
+        {t('common.back')}
       </Button>
     </div>
   )

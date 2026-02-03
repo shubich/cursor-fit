@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useStore, getLevelSetsCount } from '../store'
 import { formatSeconds, startCountdown } from '../timer-utils'
 import { playBeep } from '../sound'
@@ -26,6 +27,7 @@ function getCurrentSetInfo(exercise: Exercise, level: number, setIndex: number) 
 }
 
 export function ActiveWorkoutScreen() {
+  const { t } = useTranslation()
   const activeWorkout = useStore((s) => s.activeWorkout)
   const completeSet = useStore((s) => s.completeSet)
   const restComplete = useStore((s) => s.restComplete)
@@ -47,7 +49,7 @@ export function ActiveWorkoutScreen() {
   if (!activeWorkout) {
     return (
       <div className="p-4">
-        <p>No active workout.</p>
+        <p>{t('workout.noActiveWorkout')}</p>
       </div>
     )
   }
@@ -101,32 +103,32 @@ export function ActiveWorkoutScreen() {
             restSeconds={restSeconds}
             isRestBetweenExercises={activeWorkout.isRestBetweenExercises}
             onRestComplete={handleRestComplete}
-            nextLabel="Next Exercise"
+            nextLabel={t('workout.nextExercise')}
           />
           <div className="flex gap-2">
             <Button variant="secondary" size="md" className="flex-1" onClick={handleRestComplete}>
-              Skip rest
+              {t('workout.skipRest')}
             </Button>
             <Button variant="danger" size="md" onClick={() => setShowQuitConfirm(true)}>
-              Quit workout
+              {t('workout.quitWorkout')}
             </Button>
           </div>
         </div>
         <Modal
           open={showQuitConfirm}
           onClose={closeQuitModal}
-          title="Quit workout?"
+          title={t('workout.quitConfirmTitle')}
           titleId="quit-modal-title"
         >
           <p className="text-sm text-slate-600 dark:text-slate-400">
-            Progress will not be saved. Are you sure?
+            {t('workout.quitConfirmMessage')}
           </p>
           <div className="mt-6 flex gap-3">
             <Button variant="secondary" fullWidth onClick={closeQuitModal}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button variant="dangerFilled" fullWidth onClick={handleQuitConfirm}>
-              Quit workout
+              {t('workout.quitWorkout')}
             </Button>
           </div>
         </Modal>
@@ -141,13 +143,16 @@ export function ActiveWorkoutScreen() {
           <div className="min-w-0 flex-1 text-center">
             {isSession && (
               <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                Exercise {activeWorkout.currentExerciseIndex + 1} of {activeWorkout.exercises.length}
+                {t('workout.exerciseOf', {
+                  current: activeWorkout.currentExerciseIndex + 1,
+                  total: activeWorkout.exercises.length,
+                })}
               </p>
             )}
             <h1 className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">{exercise.name}</h1>
           </div>
           <Button variant="ghost" size="sm" onClick={() => setShowQuitConfirm(true)}>
-            Quit
+            {t('common.quit')}
           </Button>
         </div>
 
@@ -166,21 +171,21 @@ export function ActiveWorkoutScreen() {
           ))}
         </div>
         <p className="text-center text-lg font-medium text-slate-700 dark:text-slate-300">
-          Set {activeWorkout.currentSet} of {totalSets}
+          {t('workout.setOf', { current: activeWorkout.currentSet, total: totalSets })}
         </p>
 
         <div className="rounded-xl bg-slate-100 p-6 text-center dark:bg-slate-800">
           {exercise.isCardio ? (
             cardioRemaining === null ? (
               <>
-                <p className="text-slate-600 dark:text-slate-400">Duration</p>
+                <p className="text-slate-600 dark:text-slate-400">{t('workout.duration')}</p>
                 <p className="text-3xl font-bold text-slate-900 dark:text-white">
                   {levelInfo.duration != null ? formatSeconds(levelInfo.duration) : '—'}
                 </p>
               </>
             ) : (
               <>
-                <p className="text-slate-600 dark:text-slate-400">Time remaining</p>
+                <p className="text-slate-600 dark:text-slate-400">{t('workout.timeRemaining')}</p>
                 <p className="text-3xl font-bold tabular-nums text-slate-900 dark:text-white">
                   {formatSeconds(cardioRemaining)}
                 </p>
@@ -188,7 +193,7 @@ export function ActiveWorkoutScreen() {
             )
           ) : (
             <>
-              <p className="text-slate-600 dark:text-slate-400">Target reps</p>
+              <p className="text-slate-600 dark:text-slate-400">{t('workout.targetReps')}</p>
               <p className="text-3xl font-bold text-slate-900 dark:text-white">
                 {levelInfo.reps ?? '—'}
               </p>
@@ -196,13 +201,17 @@ export function ActiveWorkoutScreen() {
           )}
           {(levelInfo.weight !== undefined && levelInfo.weight !== 'bodyweight') && (
             <p className="mt-2 text-slate-600 dark:text-slate-400">
-              Weight: {typeof levelInfo.weight === 'number' ? `${levelInfo.weight} kg` : levelInfo.weight}
+              {t('workout.weightLabel', {
+                value: typeof levelInfo.weight === 'number'
+                  ? t('workout.weightKg', { n: levelInfo.weight })
+                  : levelInfo.weight,
+              })}
             </p>
           )}
         </div>
 
         <p className="text-center text-sm text-slate-500 dark:text-slate-400">
-          Rest after this set: {formatSeconds(exercise.restBetweenSets)}
+          {t('workout.restAfterSet', { seconds: formatSeconds(exercise.restBetweenSets) })}
         </p>
 
         {exercise.isCardio ? (
@@ -215,10 +224,10 @@ export function ActiveWorkoutScreen() {
                 className="active:scale-[0.98]"
                 onClick={handleCardioStartSet}
               >
-                Start set
+                {t('workout.startSet')}
               </Button>
               <Button variant="secondary" size="md" fullWidth onClick={handleCardioCompleteEarly}>
-                Complete set
+                {t('workout.completeSet')}
               </Button>
             </div>
           ) : (
@@ -229,7 +238,7 @@ export function ActiveWorkoutScreen() {
               className="mt-auto active:scale-[0.98]"
               onClick={handleCardioCompleteEarly}
             >
-              Complete early
+              {t('workout.completeEarly')}
             </Button>
           )
         ) : (
@@ -240,25 +249,25 @@ export function ActiveWorkoutScreen() {
             className="mt-auto active:scale-[0.98]"
             onClick={completeSet}
           >
-            Complete set
+            {t('workout.completeSet')}
           </Button>
         )}
       </div>
       <Modal
         open={showQuitConfirm}
         onClose={closeQuitModal}
-        title="Quit workout?"
+        title={t('workout.quitConfirmTitle')}
         titleId="quit-modal-title"
       >
         <p className="text-sm text-slate-600 dark:text-slate-400">
-          Progress will not be saved. Are you sure?
+          {t('workout.quitConfirmMessage')}
         </p>
         <div className="mt-6 flex gap-3">
           <Button variant="secondary" fullWidth onClick={closeQuitModal}>
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button variant="dangerFilled" fullWidth onClick={handleQuitConfirm}>
-            Quit workout
+            {t('workout.quitWorkout')}
           </Button>
         </div>
       </Modal>

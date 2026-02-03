@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { startCountdown, formatSeconds } from '../timer-utils'
 import { playBeep } from '../sound'
 import { Button } from './ui'
@@ -16,8 +17,10 @@ export function RestTimer({
   restSeconds,
   isRestBetweenExercises,
   onRestComplete,
-  nextLabel = 'Next Exercise',
+  nextLabel,
 }: RestTimerProps) {
+  const { t } = useTranslation()
+  const resolvedNextLabel = nextLabel ?? t('restTimer.nextExercise')
   const [remaining, setRemaining] = useState<number | null>(null)
 
   useEffect(() => {
@@ -52,7 +55,7 @@ export function RestTimer({
     return (
       <div className="rounded-xl bg-amber-100 p-4 text-center dark:bg-amber-900/30">
         <p className="text-lg font-medium text-amber-800 dark:text-amber-200">
-          {isRestBetweenExercises ? nextLabel : 'Next set'}
+          {isRestBetweenExercises ? resolvedNextLabel : t('restTimer.nextSet')}
         </p>
         <Button
           variant="primary"
@@ -61,7 +64,7 @@ export function RestTimer({
           className="mt-3 !bg-amber-500 !hover:bg-amber-600"
           onClick={onRestComplete}
         >
-          {isRestBetweenExercises ? nextLabel : 'Start next set'}
+          {isRestBetweenExercises ? resolvedNextLabel : t('restTimer.startNextSet')}
         </Button>
       </div>
     )
@@ -71,7 +74,7 @@ export function RestTimer({
     return (
       <div className="rounded-xl bg-green-100 p-4 text-center dark:bg-green-900/30">
         <p className="text-lg font-semibold text-green-800 dark:text-green-200">
-          Start next {isRestBetweenExercises ? 'exercise' : 'set'}!
+          {isRestBetweenExercises ? t('restTimer.startNextExercise') : t('restTimer.startNextSetExclaim')}
         </p>
         <Button
           variant="primary"
@@ -80,7 +83,7 @@ export function RestTimer({
           className="mt-3 !bg-green-600 !hover:bg-green-700"
           onClick={onRestComplete}
         >
-          Continue
+          {t('restTimer.continue')}
         </Button>
       </div>
     )
@@ -89,13 +92,13 @@ export function RestTimer({
   return (
     <div className="rounded-xl bg-slate-200 p-6 text-center dark:bg-slate-700">
       <p className="text-sm font-medium text-slate-600 dark:text-slate-300">
-        {isRestBetweenExercises ? 'Rest before next exercise' : 'Rest'}
+        {isRestBetweenExercises ? t('restTimer.restBeforeNextExercise') : t('restTimer.rest')}
       </p>
       <p className="mt-2 text-5xl font-bold tabular-nums text-slate-900 dark:text-white">
         {remaining != null ? formatSeconds(remaining) : '--:--'}
       </p>
       <p className="mt-1 text-xs text-slate-500">
-        Stay on this screen or switch tabs — timer stays accurate
+        {t('restTimer.stayOnScreen')}
       </p>
     </div>
   )

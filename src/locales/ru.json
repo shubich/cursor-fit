@@ -1,0 +1,103 @@
+{
+  "common": {
+    "cancel": "Отмена",
+    "save": "Сохранить",
+    "create": "Создать",
+    "quit": "Выход",
+    "back": "На главную",
+    "delete": "Удалить",
+    "edit": "Изменить",
+    "add": "Добавить",
+    "remove": "Убрать",
+    "name": "Название",
+    "level": "Уровень",
+    "weight": "Вес",
+    "home": "Главная"
+  },
+  "home": {
+    "title": "Cursor Fit",
+    "subtitle": "Управляйте упражнениями, создавайте тренировки и проводите занятия. Все данные хранятся на устройстве.",
+    "exercises": "Упражнения",
+    "sessions": "Тренировки"
+  },
+  "exercises": {
+    "title": "Упражнения",
+    "addExercise": "Добавить упражнение",
+    "noExercises": "Пока нет упражнений. Добавьте первое.",
+    "cardio": "Кардио",
+    "strength": "Силовое",
+    "levels": "уровн(ей)",
+    "rest": "отдых",
+    "startWorkout": "Начать тренировку"
+  },
+  "exerciseForm": {
+    "newTitle": "Новое упражнение",
+    "editTitle": "Редактировать упражнение",
+    "restBetweenSets": "Отдых между подходами (с)",
+    "cardio": "Кардио",
+    "numberOfLevels": "Количество уровней (1–10)",
+    "levelsLabel": "Уровни (у каждого свои подходы)",
+    "levelSets": "Уровень {{level}} — {{count}} подход(ов)",
+    "durationSec": "Длительность (с)",
+    "reps": "Повторения",
+    "weightPlaceholder": "свой вес или 5 кг",
+    "bodyweightPlaceholder": "свой вес",
+    "addSet": "+ Добавить подход",
+    "namePlaceholder": "напр. Отжимания"
+  },
+  "sessions": {
+    "title": "Тренировки",
+    "newSession": "Новая тренировка",
+    "noSessions": "Пока нет тренировок. Создайте одну для занятий из нескольких упражнений.",
+    "exercisesCount": "упражнений",
+    "restBetween": "отдых",
+    "startSession": "Начать тренировку"
+  },
+  "sessionCreator": {
+    "newTitle": "Новая тренировка",
+    "editTitle": "Редактировать тренировку",
+    "sessionName": "Название тренировки",
+    "sessionNamePlaceholder": "напр. Всё тело",
+    "restBetweenExercises": "Отдых между упражнениями (секунды)",
+    "selectExercises": "Выберите упражнения и уровень для каждого"
+  },
+  "workout": {
+    "noActiveWorkout": "Нет активной тренировки.",
+    "exerciseOf": "Упражнение {{current}} из {{total}}",
+    "setOf": "Подход {{current}} из {{total}}",
+    "targetReps": "Цель по повторениям",
+    "duration": "Длительность",
+    "timeRemaining": "Осталось времени",
+    "startSet": "Начать подход",
+    "completeSet": "Завершить подход",
+    "completeEarly": "Завершить досрочно",
+    "restAfterSet": "Отдых после подхода: {{seconds}}",
+    "weightLabel": "Вес: {{value}}",
+    "weightKg": "{{n}} кг",
+    "skipRest": "Пропустить отдых",
+    "quitWorkout": "Выйти из тренировки",
+    "quitConfirmTitle": "Выйти из тренировки?",
+    "quitConfirmMessage": "Прогресс не будет сохранён. Вы уверены?",
+    "nextExercise": "Следующее упражнение"
+  },
+  "restTimer": {
+    "nextSet": "Следующий подход",
+    "startNextSet": "Начать следующий подход",
+    "nextExercise": "Следующее упражнение",
+    "continue": "Продолжить",
+    "rest": "Отдых",
+    "restBeforeNextExercise": "Отдых перед следующим упражнением",
+    "stayOnScreen": "Оставайтесь на экране или переключайте вкладки — таймер остаётся точным",
+    "startNextExercise": "К следующему упражнению!",
+    "startNextSetExclaim": "К следующему подходу!"
+  },
+  "results": {
+    "title": "Тренировка завершена",
+    "noResults": "Нет результатов.",
+    "totalTime": "Общее время",
+    "summary": "Итог",
+    "setIndex": "Подход {{index}}",
+    "repsCount": "{{count}} повтор.",
+    "finish": "Готово"
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "create": "Create",
+    "quit": "Quit",
+    "back": "Back to home",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "name": "Name",
+    "level": "Level",
+    "weight": "Weight",
+    "home": "Home"
+  },
+  "home": {
+    "title": "Cursor Fit",
+    "subtitle": "Manage exercises, create sessions, and run workouts. All data is stored on this device.",
+    "exercises": "Exercises",
+    "sessions": "Sessions"
+  },
+  "exercises": {
+    "title": "Exercises",
+    "addExercise": "Add exercise",
+    "noExercises": "No exercises yet. Add one to get started.",
+    "cardio": "Cardio",
+    "strength": "Strength",
+    "levels": "level(s)",
+    "rest": "rest",
+    "startWorkout": "Start workout"
+  },
+  "exerciseForm": {
+    "newTitle": "New exercise",
+    "editTitle": "Edit exercise",
+    "restBetweenSets": "Rest between sets (s)",
+    "cardio": "Cardio",
+    "numberOfLevels": "Number of levels (1–10)",
+    "levelsLabel": "Levels (each level has its own sets)",
+    "levelSets": "Level {{level}} — {{count}} set(s)",
+    "durationSec": "Duration (s)",
+    "reps": "Reps",
+    "weightPlaceholder": "bodyweight or 5kg",
+    "bodyweightPlaceholder": "bodyweight",
+    "addSet": "+ Add set",
+    "namePlaceholder": "e.g. Push-ups"
+  },
+  "sessions": {
+    "title": "Sessions",
+    "newSession": "New session",
+    "noSessions": "No sessions yet. Create one to run multi-exercise workouts.",
+    "exercisesCount": "exercises",
+    "restBetween": "rest",
+    "startSession": "Start session"
+  },
+  "sessionCreator": {
+    "newTitle": "New session",
+    "editTitle": "Edit session",
+    "sessionName": "Session name",
+    "sessionNamePlaceholder": "e.g. Full body",
+    "restBetweenExercises": "Rest between exercises (seconds)",
+    "selectExercises": "Select exercises and set level for each"
+  },
+  "workout": {
+    "noActiveWorkout": "No active workout.",
+    "exerciseOf": "Exercise {{current}} of {{total}}",
+    "setOf": "Set {{current}} of {{total}}",
+    "targetReps": "Target reps",
+    "duration": "Duration",
+    "timeRemaining": "Time remaining",
+    "startSet": "Start set",
+    "completeSet": "Complete set",
+    "completeEarly": "Complete early",
+    "restAfterSet": "Rest after this set: {{seconds}}",
+    "weightLabel": "Weight: {{value}}",
+    "weightKg": "{{n}} kg",
+    "skipRest": "Skip rest",
+    "quitWorkout": "Quit workout",
+    "quitConfirmTitle": "Quit workout?",
+    "quitConfirmMessage": "Progress will not be saved. Are you sure?",
+    "nextExercise": "Next Exercise"
+  },
+  "restTimer": {
+    "nextSet": "Next set",
+    "startNextSet": "Start next set",
+    "nextExercise": "Next Exercise",
+    "continue": "Continue",
+    "rest": "Rest",
+    "restBeforeNextExercise": "Rest before next exercise",
+    "stayOnScreen": "Stay on this screen or switch tabs — timer stays accurate",
+    "startNextExercise": "Start next exercise!",
+    "startNextSetExclaim": "Start next set!"
+  },
+  "results": {
+    "title": "Workout complete",
+    "noResults": "No results.",
+    "totalTime": "Total time",
+    "summary": "Summary",
+    "setIndex": "Set {{index}}",
+    "repsCount": "{{count}} reps",
+    "finish": "Finish"
+  }
+}
