@@ -141,14 +141,9 @@ describe('ActiveWorkoutScreen', () => {
       const user = userEvent.setup()
       render(<ActiveWorkoutScreen />)
       await user.click(screen.getByRole('button', { name: /start set/i }))
-      await waitFor(() => {
-        expect(screen.getByRole('button', { name: /complete early/i })).toBeInTheDocument()
-      })
-      const completeEarlyBtn = screen.getByRole('button', { name: /complete early/i })
+      const completeEarlyBtn = await screen.findByRole('button', { name: /complete early/i })
       fireEvent.click(completeEarlyBtn)
-      await waitFor(() => {
-        expect(useStore.getState().activeWorkout?.isResting).toBe(true)
-      })
+      await screen.findByRole('button', { name: /skip rest/i })
       expect(useStore.getState().activeWorkout?.exercises[0].completedSets).toBe(1)
     })
   })

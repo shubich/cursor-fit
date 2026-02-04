@@ -51,7 +51,7 @@ describe('createEmptyStrengthLevel / createEmptyCardioLevel', () => {
     const level = createEmptyStrengthLevel(1)
     expect(level.level).toBe(1)
     expect(level.sets).toHaveLength(3)
-    expect(level.sets[0]).toEqual({ reps: 8, weight: 'bodyweight' })
+    expect(level.sets[0]).toEqual({ reps: 8, weight: 0 })
   })
 
   it('createEmptyCardioLevel returns level with 3 sets', () => {

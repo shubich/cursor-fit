@@ -69,10 +69,26 @@ export function ExerciseForm() {
     }
   }, [isCardio, levelCount])
 
+  const normalizeWeight = (w: number | string | undefined): number | string =>
+    w === '' ? 0 : (w ?? 0)
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!name.trim()) return
-    const lev = levels.slice(0, levelCount)
+    const rawLev = levels.slice(0, levelCount)
+    const lev = rawLev.map((l) => ({
+      ...l,
+      sets: l.sets.map((s) => {
+        const set = s as StrengthSet | CardioSet
+        if ('reps' in set) {
+          return { ...set, weight: normalizeWeight(set.weight) }
+        }
+        if ('duration' in set && set.weight !== undefined) {
+          return { ...set, weight: normalizeWeight(set.weight) }
+        }
+        return set
+      }),
+    })) as (StrengthLevel | CardioLevel)[]
     if (isEdit && existing) {
       if (existing.isCardio) {
         updateExercise(existing.id, {
@@ -130,7 +146,7 @@ export function ExerciseForm() {
           const newSet: CardioSet = { duration: 60 }
           return { ...l, sets: [...(l as CardioLevel).sets, newSet] } as CardioLevel
         }
-        const newSet: StrengthSet = { reps: 8, weight: 'bodyweight' }
+        const newSet: StrengthSet = { reps: 8, weight: 0 }
         return { ...l, sets: [...(l as StrengthLevel).sets, newSet] } as StrengthLevel
       })
     )
@@ -147,9 +163,9 @@ export function ExerciseForm() {
   }
 
   const weightDisplay = (w: number | string) =>
-    typeof w === 'number' ? String(w) : w
+    w === '' ? '' : (w === 'bodyweight' || w === 0 ? '0' : typeof w === 'number' ? String(w) : w)
   const weightParse = (s: string): number | string =>
-    s.trim() === '' ? 'bodyweight' : /^\d+(\.\d+)?$/.test(s.trim()) ? Number(s.trim()) : s.trim()
+    s.trim() === '' ? '' : /^\d+(\.\d+)?$/.test(s.trim()) ? Number(s.trim()) : s.trim()
 
   return (
     <div className="flex flex-col gap-6 p-4">
@@ -238,7 +254,7 @@ export function ExerciseForm() {
                           <span className="text-xs text-slate-500">{t('common.weight')}</span>
                           <input
                             type="text"
-                            value={weightDisplay((set as CardioSet).weight ?? 'bodyweight')}
+                            value={weightDisplay((set as CardioSet).weight ?? 0)}
                             onChange={(e) =>
                               updateSetInLevel(levelIdx, setIdx, {
                                 weight: weightParse(e.target.value),

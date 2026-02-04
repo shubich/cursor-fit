@@ -57,7 +57,7 @@ export function ResultsScreen() {
                     {t('results.setIndex', { index: s.setIndex })}:{' '}
                     {s.reps != null ? t('results.repsCount', { count: s.reps }) : ''}
                     {s.duration != null ? formatSeconds(s.duration) : ''}
-                    {s.weight !== undefined && s.weight !== 'bodyweight'
+                    {s.weight !== undefined && s.weight !== 'bodyweight' && s.weight !== 0
                       ? ` · ${typeof s.weight === 'number' ? t('workout.weightKg', { n: s.weight }) : s.weight}`
                       : ''}
                   </li>

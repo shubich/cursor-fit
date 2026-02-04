@@ -199,7 +199,7 @@ export function ActiveWorkoutScreen() {
               </p>
             </>
           )}
-          {(levelInfo.weight !== undefined && levelInfo.weight !== 'bodyweight') && (
+          {(levelInfo.weight !== undefined && levelInfo.weight !== 'bodyweight' && levelInfo.weight !== 0) && (
             <p className="mt-2 text-slate-600 dark:text-slate-400">
               {t('workout.weightLabel', {
                 value: typeof levelInfo.weight === 'number'

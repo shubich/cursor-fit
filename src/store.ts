@@ -353,7 +353,7 @@ export function createEmptyStrengthLevel(level: number): StrengthLevel {
     level,
     sets: Array.from({ length: DEFAULT_SETS_COUNT }, () => ({
       reps: 8,
-      weight: 'bodyweight' as const,
+      weight: 0,
     })),
   }
 }
