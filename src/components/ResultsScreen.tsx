@@ -35,7 +35,7 @@ export function ResultsScreen() {
   )
 
   return (
-    <div className="flex min-h-[100dvh] flex-col gap-6 p-4 pb-8">
+    <div className="flex min-h-0 flex-1 flex-col gap-6 p-4 pb-8">
       <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t('results.title')}</h1>
 
       <div className="rounded-xl bg-emerald-100 p-4 dark:bg-emerald-900/30">
