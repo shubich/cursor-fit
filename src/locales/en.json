@@ -47,6 +47,8 @@
     "weightPlaceholder": "bodyweight or 5kg",
     "bodyweightPlaceholder": "bodyweight",
     "addSet": "+ Add set",
+    "addLevel": "+ Add level",
+    "maxLevelsReached": "Maximum levels (10) reached.",
     "namePlaceholder": "e.g. Push-ups",
     "errors": {
       "nameLength": "Name must be 2–35 characters",

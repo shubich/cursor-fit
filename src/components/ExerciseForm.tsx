@@ -25,19 +25,14 @@ export function ExerciseForm() {
   const [name, setName] = useState('')
   const [restBetweenSets, setRestBetweenSets] = useState<number | ''>(60)
   const [isCardio, setIsCardio] = useState(false)
-  const [levelCount, setLevelCount] = useState<number | ''>(3)
   const [levels, setLevels] = useState<(StrengthLevelForm | CardioLevelForm)[]>([])
   const [touched, setTouched] = useState<Record<string, boolean>>({})
-
-  const numLevelCount = levelCount === '' ? 0 : Number(levelCount)
-  const effectiveLevelCount = Math.min(10, numLevelCount)
 
   useEffect(() => {
     if (existing) {
       setName(existing.name)
       setRestBetweenSets(existing.restBetweenSets)
       setIsCardio(existing.isCardio)
-      setLevelCount(existing.levels.length)
       setLevels(
         existing.levels.map((l) => ({ ...l, sets: l.sets.map((s) => ({ ...s })) })) as (
           | StrengthLevel
@@ -45,55 +40,31 @@ export function ExerciseForm() {
         )[]
       )
     } else {
-      setLevelCount(3)
-      setLevels(
-        Array.from({ length: 3 }, (_, i) =>
-          isCardio ? createEmptyCardioLevel(i + 1) : createEmptyStrengthLevel(i + 1)
-        )
-      )
+      setLevels([
+        (isCardio ? createEmptyCardioLevel(1) : createEmptyStrengthLevel(1)) as
+          | StrengthLevelForm
+          | CardioLevelForm,
+      ])
     }
   }, [existing?.id])
 
   useEffect(() => {
-    if (existing) {
-      setLevels((prev) => {
-        if (effectiveLevelCount > prev.length) {
-          const next = [...prev]
-          while (next.length < effectiveLevelCount) {
-            const levelNum = next.length + 1
-            next.push(
-              (isCardio ? createEmptyCardioLevel(levelNum) : createEmptyStrengthLevel(levelNum)) as
-                | StrengthLevelForm
-                | CardioLevelForm
-            )
-          }
-          return next
-        }
-        if (effectiveLevelCount < prev.length) return prev.slice(0, effectiveLevelCount) as (StrengthLevelForm | CardioLevelForm)[]
-        return prev
-      })
-    } else {
-      setLevels(
-        Array.from({ length: effectiveLevelCount }, (_, i) =>
-          (isCardio ? createEmptyCardioLevel(i + 1) : createEmptyStrengthLevel(i + 1)) as
-            | StrengthLevelForm
-            | CardioLevelForm
-        )
+    if (existing) return
+    setLevels((prev) =>
+      prev.map((_, i) =>
+        (isCardio ? createEmptyCardioLevel(i + 1) : createEmptyStrengthLevel(i + 1)) as
+          | StrengthLevelForm
+          | CardioLevelForm
       )
-    }
-  }, [isCardio, effectiveLevelCount])
+    )
+  }, [isCardio])
 
   const nameValid = name.trim().length >= 2 && name.trim().length <= 35
   const restValid =
     restBetweenSets !== '' &&
     !Number.isNaN(Number(restBetweenSets)) &&
     Number(restBetweenSets) > 0
-  const levelCountValid =
-    levelCount !== '' &&
-    !Number.isNaN(Number(levelCount)) &&
-    Number(levelCount) >= 1 &&
-    Number(levelCount) <= 10
-  const activeLevels = levels.slice(0, effectiveLevelCount)
+  const activeLevels = levels
   const setsValid = activeLevels.every((level) => {
     if ('sets' in level) {
       return level.sets.every((set) => {
@@ -106,7 +77,7 @@ export function ExerciseForm() {
     }
     return true
   })
-  const formValid = nameValid && restValid && levelCountValid && setsValid
+  const formValid = nameValid && restValid && setsValid
 
   const touch = (key: string) => setTouched((t) => ({ ...t, [key]: true }))
 
@@ -118,7 +89,7 @@ export function ExerciseForm() {
     if (!formValid) return
     const rest =
       (restBetweenSets as number | '') === '' ? 0 : Number(restBetweenSets as number)
-    const rawLev = levels.slice(0, effectiveLevelCount)
+    const rawLev = levels
     const lev = rawLev.map((l) => ({
       ...l,
       sets: l.sets.map((s) => {
@@ -213,6 +184,25 @@ export function ExerciseForm() {
     )
   }
 
+  const addLevel = () => {
+    if (levels.length >= 10) return
+    const levelNum = levels.length + 1
+    setLevels((prev) => [
+      ...prev,
+      (isCardio ? createEmptyCardioLevel(levelNum) : createEmptyStrengthLevel(levelNum)) as
+        | StrengthLevelForm
+        | CardioLevelForm,
+    ])
+  }
+
+  const removeLevel = (levelIndex: number) => {
+    if (levels.length <= 1) return
+    setLevels((prev) => {
+      const next = prev.filter((_, i) => i !== levelIndex)
+      return next.map((l, i) => ({ ...l, level: i + 1 })) as (StrengthLevelForm | CardioLevelForm)[]
+    })
+  }
+
   const weightDisplay = (w: number | string) =>
     w === '' ? '' : (w === 'bodyweight' || w === 0 ? '0' : typeof w === 'number' ? String(w) : w)
   const weightParse = (s: string): number | string =>
@@ -279,39 +269,23 @@ export function ExerciseForm() {
           )}
         </label>
 
-        <label className="block">
-          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-            {t('exerciseForm.numberOfLevels')}
-          </span>
-          <input
-            type="number"
-            min={1}
-            max={10}
-            value={levelCount === '' ? '' : levelCount}
-            onChange={(e) =>
-              setLevelCount(e.target.value === '' ? '' : Number(e.target.value))
-            }
-            onBlur={() => touch('levelCount')}
-            className={`mt-1 w-full rounded-lg border px-3 py-2 dark:bg-slate-800 dark:text-white ${
-              touched.levelCount && !levelCountValid
-                ? 'border-red-500 dark:border-red-400'
-                : 'border-slate-300 dark:border-slate-600'
-            }`}
-          />
-          {touched.levelCount && !levelCountValid && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
-              {t('exerciseForm.errors.levelCountRange')}
-            </p>
-          )}
-        </label>
-
         <div className="space-y-4">
           <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('exerciseForm.levelsLabel')}</span>
-          {levels.slice(0, effectiveLevelCount).map((l, levelIdx) => (
+          {levels.map((l, levelIdx) => (
             <Card key={levelIdx} className="p-4">
-              <p className="mb-3 text-sm font-medium text-slate-600 dark:text-slate-400">
-                {t('exerciseForm.levelSets', { level: l.level, count: l.sets.length })}
-              </p>
+              <div className="mb-3 flex items-center justify-between">
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                  {t('exerciseForm.levelSets', { level: l.level, count: l.sets.length })}
+                </p>
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => removeLevel(levelIdx)}
+                  disabled={levels.length <= 1}
+                >
+                  {t('common.remove')}
+                </Button>
+              </div>
               <div className="flex flex-col gap-2">
                 {l.sets.map((set, setIdx) => (
                   <div
@@ -450,6 +424,22 @@ export function ExerciseForm() {
               </Button>
             </Card>
           ))}
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={addLevel}
+              disabled={levels.length >= 10}
+            >
+              {t('exerciseForm.addLevel')}
+            </Button>
+            {levels.length >= 10 && (
+              <span className="text-xs text-slate-500 dark:text-slate-400">
+                {t('exerciseForm.maxLevelsReached')}
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="flex gap-3">

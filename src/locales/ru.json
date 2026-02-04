@@ -47,6 +47,8 @@
     "weightPlaceholder": "свой вес или 5 кг",
     "bodyweightPlaceholder": "свой вес",
     "addSet": "+ Добавить подход",
+    "addLevel": "+ Добавить уровень",
+    "maxLevelsReached": "Достигнут максимум уровней (10).",
     "namePlaceholder": "напр. Отжимания",
     "errors": {
       "nameLength": "Название: от 2 до 35 символов",
