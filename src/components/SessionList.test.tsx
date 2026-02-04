@@ -37,6 +37,7 @@ describe('SessionList', () => {
     const user = userEvent.setup()
     render(<SessionList />)
     expect(screen.getByText('Full body')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /expand full body/i }))
     await user.click(screen.getByRole('button', { name: /start session/i }))
     expect(useStore.getState().screen).toBe('workout')
     expect(useStore.getState().activeWorkout?.exercises).toHaveLength(1)
@@ -51,6 +52,7 @@ describe('SessionList', () => {
     const id = useStore.getState().sessions[0].id
     const user = userEvent.setup()
     render(<SessionList />)
+    await user.click(screen.getByRole('button', { name: /expand s1/i }))
     await user.click(screen.getByRole('button', { name: /edit/i }))
     expect(useStore.getState().screen).toBe('session-edit')
     expect(useStore.getState().editingSessionId).toBe(id)
@@ -64,6 +66,7 @@ describe('SessionList', () => {
     })
     const user = userEvent.setup()
     render(<SessionList />)
+    await user.click(screen.getByRole('button', { name: /expand s1/i }))
     await user.click(screen.getByRole('button', { name: /delete/i }))
     expect(useStore.getState().sessions).toHaveLength(0)
   })

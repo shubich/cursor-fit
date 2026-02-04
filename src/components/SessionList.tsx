@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useStore } from '../store'
 import { Button, Card } from './ui'
@@ -11,9 +12,15 @@ export function SessionList() {
   const deleteSession = useStore((s) => s.deleteSession)
   const startSessionWorkout = useStore((s) => s.startSessionWorkout)
 
+  const [expandedId, setExpandedId] = useState<string | null>(null)
+
   const handleEdit = (id: string) => {
     setEditingSessionId(id)
     setScreen('session-edit')
+  }
+
+  const toggleExpanded = (id: string) => {
+    setExpandedId((prev) => (prev === id ? null : id))
   }
 
   return (
@@ -41,37 +48,67 @@ export function SessionList() {
             const names = session.exercises
               .map((e) => exercises.find((x) => x.id === e.exerciseId)?.name ?? '?')
               .join(', ')
+            const isExpanded = expandedId === session.id
             return (
-              <Card as="li" key={session.id} className="flex flex-col gap-2 p-4">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
+              <Card
+                as="li"
+                key={session.id}
+                className={`flex flex-col gap-2 p-4 ${isExpanded ? 'ring-2 ring-emerald-500 ring-inset dark:ring-emerald-500' : ''}`}
+              >
+                <button
+                  type="button"
+                  className="flex w-full items-start justify-between gap-2 rounded-lg text-left focus:outline-none"
+                  onClick={() => toggleExpanded(session.id)}
+                  aria-expanded={isExpanded}
+                  aria-label={
+                    isExpanded
+                      ? `${t('common.collapse')} ${session.name}`
+                      : `${t('common.expand')} ${session.name}`
+                  }
+                >
+                  <div className="min-w-0 flex-1">
                     <h2 className="font-semibold text-slate-900 dark:text-white">
                       {session.name}
                     </h2>
+                    {!isExpanded && (
+                      <p className="text-sm text-slate-500 dark:text-slate-400">
+                        {session.exercises.length} {t('sessions.exercisesCount')} · {t('sessions.restBetween')} {session.restBetweenExercises}s
+                      </p>
+                    )}
+                  </div>
+                  <span
+                    className={`inline-block shrink-0 text-slate-500 transition-transform dark:text-slate-400 ${isExpanded ? 'rotate-180' : ''}`}
+                    aria-hidden
+                  >
+                    ▾
+                  </span>
+                </button>
+                {isExpanded && (
+                  <>
                     <p className="text-sm text-slate-500 dark:text-slate-400">
                       {session.exercises.length} {t('sessions.exercisesCount')} · {t('sessions.restBetween')} {session.restBetweenExercises}s
                     </p>
-                    <p className="mt-1 truncate text-xs text-slate-400 dark:text-slate-500">
+                    <p className="truncate text-xs text-slate-400 dark:text-slate-500">
                       {names}
                     </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="secondary" size="sm" onClick={() => handleEdit(session.id)}>
-                      {t('common.edit')}
+                    <div className="flex gap-2">
+                      <Button variant="secondary" size="sm" onClick={() => handleEdit(session.id)}>
+                        {t('common.edit')}
+                      </Button>
+                      <Button variant="danger" size="sm" onClick={() => deleteSession(session.id)}>
+                        {t('common.delete')}
+                      </Button>
+                    </div>
+                    <Button
+                      variant="primary"
+                      inverted
+                      fullWidth
+                      onClick={() => startSessionWorkout(session.id)}
+                    >
+                      {t('sessions.startSession')}
                     </Button>
-                    <Button variant="danger" size="sm" onClick={() => deleteSession(session.id)}>
-                      {t('common.delete')}
-                    </Button>
-                  </div>
-                </div>
-                <Button
-                  variant="primary"
-                  inverted
-                  fullWidth
-                  onClick={() => startSessionWorkout(session.id)}
-                >
-                  {t('sessions.startSession')}
-                </Button>
+                  </>
+                )}
               </Card>
             )
           })}
