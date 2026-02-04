@@ -47,7 +47,12 @@
     "weightPlaceholder": "bodyweight or 5kg",
     "bodyweightPlaceholder": "bodyweight",
     "addSet": "+ Add set",
-    "namePlaceholder": "e.g. Push-ups"
+    "namePlaceholder": "e.g. Push-ups",
+    "errors": {
+      "nameLength": "Name must be 2–35 characters",
+      "restGreaterThanZero": "Must be greater than 0",
+      "levelCountRange": "Must be between 1 and 10"
+    }
   },
   "sessions": {
     "title": "Sessions",

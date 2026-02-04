@@ -47,7 +47,12 @@
     "weightPlaceholder": "свой вес или 5 кг",
     "bodyweightPlaceholder": "свой вес",
     "addSet": "+ Добавить подход",
-    "namePlaceholder": "напр. Отжимания"
+    "namePlaceholder": "напр. Отжимания",
+    "errors": {
+      "nameLength": "Название: от 2 до 35 символов",
+      "restGreaterThanZero": "Должно быть больше 0",
+      "levelCountRange": "Должно быть от 1 до 10"
+    }
   },
   "sessions": {
     "title": "Тренировки",
