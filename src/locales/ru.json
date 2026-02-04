@@ -30,7 +30,9 @@
     "strength": "Силовое",
     "levels": "уровн(ей)",
     "rest": "отдых",
-    "startWorkout": "Начать тренировку"
+    "startWorkout": "Начать тренировку",
+    "deleteConfirmTitle": "Удалить упражнение?",
+    "deleteConfirmMessage": "Упражнение будет удалено. Вы уверены?"
   },
   "exerciseForm": {
     "newTitle": "Новое упражнение",
@@ -53,7 +55,9 @@
     "noSessions": "Пока нет тренировок. Создайте одну для занятий из нескольких упражнений.",
     "exercisesCount": "упражнений",
     "restBetween": "отдых",
-    "startSession": "Начать тренировку"
+    "startSession": "Начать тренировку",
+    "deleteConfirmTitle": "Удалить тренировку?",
+    "deleteConfirmMessage": "Тренировка будет удалена. Вы уверены?"
   },
   "sessionCreator": {
     "newTitle": "Новая тренировка",

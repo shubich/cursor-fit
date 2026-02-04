@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useStore } from '../store'
-import { Button, Card } from './ui'
+import { Button, Card, Modal } from './ui'
 import type { Exercise } from '../types'
 
 export function ExerciseList() {
@@ -14,6 +14,7 @@ export function ExerciseList() {
 
   const [levelByExerciseId, setLevelByExerciseId] = useState<Record<string, number>>({})
   const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [exerciseToDeleteId, setExerciseToDeleteId] = useState<string | null>(null)
 
   const handleEdit = (id: string) => {
     setEditingExerciseId(id)
@@ -95,7 +96,7 @@ export function ExerciseList() {
                       <Button variant="secondary" size="sm" onClick={() => handleEdit(ex.id)}>
                         {t('common.edit')}
                       </Button>
-                      <Button variant="danger" size="sm" onClick={() => deleteExercise(ex.id)}>
+                      <Button variant="danger" size="sm" onClick={() => setExerciseToDeleteId(ex.id)}>
                         {t('common.delete')}
                       </Button>
                     </div>
@@ -140,6 +141,34 @@ export function ExerciseList() {
       <Button variant="secondary" onClick={() => setScreen('home')}>
         {t('common.back')}
       </Button>
+
+      <Modal
+        open={exerciseToDeleteId != null}
+        onClose={() => setExerciseToDeleteId(null)}
+        title={t('exercises.deleteConfirmTitle')}
+        titleId="delete-exercise-modal-title"
+      >
+        <p className="text-sm text-slate-600 dark:text-slate-400">
+          {t('exercises.deleteConfirmMessage')}
+        </p>
+        <div className="mt-6 flex gap-3">
+          <Button variant="secondary" fullWidth onClick={() => setExerciseToDeleteId(null)}>
+            {t('common.cancel')}
+          </Button>
+          <Button
+            variant="dangerFilled"
+            fullWidth
+            onClick={() => {
+              if (exerciseToDeleteId) {
+                deleteExercise(exerciseToDeleteId)
+                setExerciseToDeleteId(null)
+              }
+            }}
+          >
+            {t('common.delete')}
+          </Button>
+        </div>
+      </Modal>
     </div>
   )
 }

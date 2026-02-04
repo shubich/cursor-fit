@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import userEvent from '@testing-library/user-event'
-import { render, screen, resetStore } from '../test/test-utils'
+import { render, screen, within, resetStore } from '../test/test-utils'
 import { SessionList } from './SessionList'
 import { useStore } from '../store'
 
@@ -68,6 +68,7 @@ describe('SessionList', () => {
     render(<SessionList />)
     await user.click(screen.getByRole('button', { name: /expand s1/i }))
     await user.click(screen.getByRole('button', { name: /delete/i }))
+    await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: /delete/i }))
     expect(useStore.getState().sessions).toHaveLength(0)
   })
 })

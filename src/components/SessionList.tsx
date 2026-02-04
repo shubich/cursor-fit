@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useStore } from '../store'
-import { Button, Card } from './ui'
+import { Button, Card, Modal } from './ui'
 
 export function SessionList() {
   const { t } = useTranslation()
@@ -13,6 +13,7 @@ export function SessionList() {
   const startSessionWorkout = useStore((s) => s.startSessionWorkout)
 
   const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [sessionToDeleteId, setSessionToDeleteId] = useState<string | null>(null)
 
   const handleEdit = (id: string) => {
     setEditingSessionId(id)
@@ -95,7 +96,7 @@ export function SessionList() {
                       <Button variant="secondary" size="sm" onClick={() => handleEdit(session.id)}>
                         {t('common.edit')}
                       </Button>
-                      <Button variant="danger" size="sm" onClick={() => deleteSession(session.id)}>
+                      <Button variant="danger" size="sm" onClick={() => setSessionToDeleteId(session.id)}>
                         {t('common.delete')}
                       </Button>
                     </div>
@@ -118,6 +119,34 @@ export function SessionList() {
       <Button variant="secondary" onClick={() => setScreen('home')}>
         {t('common.back')}
       </Button>
+
+      <Modal
+        open={sessionToDeleteId != null}
+        onClose={() => setSessionToDeleteId(null)}
+        title={t('sessions.deleteConfirmTitle')}
+        titleId="delete-session-modal-title"
+      >
+        <p className="text-sm text-slate-600 dark:text-slate-400">
+          {t('sessions.deleteConfirmMessage')}
+        </p>
+        <div className="mt-6 flex gap-3">
+          <Button variant="secondary" fullWidth onClick={() => setSessionToDeleteId(null)}>
+            {t('common.cancel')}
+          </Button>
+          <Button
+            variant="dangerFilled"
+            fullWidth
+            onClick={() => {
+              if (sessionToDeleteId) {
+                deleteSession(sessionToDeleteId)
+                setSessionToDeleteId(null)
+              }
+            }}
+          >
+            {t('common.delete')}
+          </Button>
+        </div>
+      </Modal>
     </div>
   )
 }

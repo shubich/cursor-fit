@@ -30,7 +30,9 @@
     "strength": "Strength",
     "levels": "level(s)",
     "rest": "rest",
-    "startWorkout": "Start workout"
+    "startWorkout": "Start workout",
+    "deleteConfirmTitle": "Delete exercise?",
+    "deleteConfirmMessage": "This exercise will be removed. Are you sure?"
   },
   "exerciseForm": {
     "newTitle": "New exercise",
@@ -53,7 +55,9 @@
     "noSessions": "No sessions yet. Create one to run multi-exercise workouts.",
     "exercisesCount": "exercises",
     "restBetween": "rest",
-    "startSession": "Start session"
+    "startSession": "Start session",
+    "deleteConfirmTitle": "Delete session?",
+    "deleteConfirmMessage": "This session will be removed. Are you sure?"
   },
   "sessionCreator": {
     "newTitle": "New session",

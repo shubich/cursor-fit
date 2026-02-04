@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import userEvent from '@testing-library/user-event'
-import { render, screen, resetStore } from '../test/test-utils'
+import { render, screen, within, resetStore } from '../test/test-utils'
 import { ExerciseList } from './ExerciseList'
 import { useStore } from '../store'
 
@@ -63,6 +63,7 @@ describe('ExerciseList', () => {
     render(<ExerciseList />)
     await user.click(screen.getByRole('button', { name: /expand push-ups/i }))
     await user.click(screen.getByRole('button', { name: /delete/i }))
+    await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: /delete/i }))
     expect(useStore.getState().exercises).toHaveLength(0)
   })
 
