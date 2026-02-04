@@ -6,7 +6,6 @@
   font-weight: 400;
   color-scheme: light dark;
   color: #1e293b;
-  background-color: #f8fafc;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -16,7 +15,6 @@
 @media (prefers-color-scheme: dark) {
   :root {
     color: #e2e8f0;
-    background-color: #0f172a;
   }
 }
 
@@ -25,9 +23,25 @@ body {
   min-width: 320px;
   min-height: 100vh;
   min-height: 100dvh;
+  background-color: #e2e8f0;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1e293b;
+  }
 }
 
 #root {
+  max-width: 480px;
+  margin: 0 auto;
   min-height: 100vh;
   min-height: 100dvh;
+  background-color: #f8fafc;
+}
+
+@media (prefers-color-scheme: dark) {
+  #root {
+    background-color: #0f172a;
+  }
 }
