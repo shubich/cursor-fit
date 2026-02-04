@@ -97,7 +97,7 @@ export function ActiveWorkoutScreen() {
 
     return (
       <>
-        <div className="flex min-h-[100dvh] flex-col gap-4 p-4">
+        <div className="flex min-h-0 flex-1 flex-col gap-4 p-4">
           <RestTimer
             restEndsAt={restEndsAt}
             restSeconds={restSeconds}
@@ -138,7 +138,7 @@ export function ActiveWorkoutScreen() {
 
   return (
     <>
-      <div className="flex min-h-[100dvh] flex-col gap-6 p-4 pb-8">
+      <div className="flex min-h-0 flex-1 flex-col gap-6 p-4 pb-8">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1 text-center">
             {isSession && (
