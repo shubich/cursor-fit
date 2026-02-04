@@ -231,7 +231,11 @@ export function ExerciseForm() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             onBlur={() => touch('name')}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+            className={`mt-1 w-full rounded-lg border px-3 py-2 dark:bg-slate-800 dark:text-white ${
+              touched.name && !nameValid
+                ? 'border-red-500 dark:border-red-400'
+                : 'border-slate-300 dark:border-slate-600'
+            }`}
             placeholder={t('exerciseForm.namePlaceholder')}
           />
           {touched.name && !nameValid && (
@@ -261,7 +265,11 @@ export function ExerciseForm() {
               setRestBetweenSets(e.target.value === '' ? '' : Number(e.target.value))
             }
             onBlur={() => touch('restBetweenSets')}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+            className={`mt-1 w-full rounded-lg border px-3 py-2 dark:bg-slate-800 dark:text-white ${
+              touched.restBetweenSets && !restValid
+                ? 'border-red-500 dark:border-red-400'
+                : 'border-slate-300 dark:border-slate-600'
+            }`}
           />
           {touched.restBetweenSets && !restValid && (
             <p className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
@@ -283,7 +291,11 @@ export function ExerciseForm() {
               setLevelCount(e.target.value === '' ? '' : Number(e.target.value))
             }
             onBlur={() => touch('levelCount')}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+            className={`mt-1 w-full rounded-lg border px-3 py-2 dark:bg-slate-800 dark:text-white ${
+              touched.levelCount && !levelCountValid
+                ? 'border-red-500 dark:border-red-400'
+                : 'border-slate-300 dark:border-slate-600'
+            }`}
           />
           {touched.levelCount && !levelCountValid && (
             <p className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
@@ -305,10 +317,10 @@ export function ExerciseForm() {
                     key={setIdx}
                     className="flex flex-col gap-0.5 rounded border border-slate-200 bg-slate-50 p-2 dark:border-slate-600 dark:bg-slate-900"
                   >
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex flex-wrap items-end gap-2">
                       {isCardio ? (
                         <>
-                          <label className="flex items-center gap-1">
+                          <label className="flex flex-col gap-0.5">
                             <span className="text-xs text-slate-500 whitespace-nowrap">
                               {t('exerciseForm.durationSec')}
                             </span>
@@ -325,10 +337,17 @@ export function ExerciseForm() {
                                 })
                               }}
                               onBlur={() => touch(`duration-${levelIdx}-${setIdx}`)}
-                              className="w-20 rounded border border-slate-300 px-2 py-1 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+                              className={`w-20 rounded border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white ${
+                                touched[`duration-${levelIdx}-${setIdx}`] &&
+                                ((set as CardioSetForm).duration === '' ||
+                                  Number.isNaN(Number((set as CardioSetForm).duration)) ||
+                                  Number((set as CardioSetForm).duration) <= 0)
+                                  ? 'border-red-500 dark:border-red-400'
+                                  : 'border-slate-300 dark:border-slate-600'
+                              }`}
                             />
                           </label>
-                          <label className="flex items-center gap-1">
+                          <label className="flex flex-col gap-0.5">
                             <span className="text-xs text-slate-500 whitespace-nowrap">
                               {t('common.weight')}
                             </span>
@@ -348,7 +367,7 @@ export function ExerciseForm() {
                         </>
                       ) : (
                         <>
-                          <label className="flex items-center gap-1">
+                          <label className="flex flex-col gap-0.5">
                             <span className="text-xs text-slate-500 whitespace-nowrap">
                               {t('exerciseForm.reps')}
                             </span>
@@ -365,10 +384,17 @@ export function ExerciseForm() {
                                 })
                               }}
                               onBlur={() => touch(`reps-${levelIdx}-${setIdx}`)}
-                              className="w-20 rounded border border-slate-300 px-2 py-1 text-sm dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+                              className={`w-20 rounded border px-2 py-1 text-sm dark:bg-slate-800 dark:text-white ${
+                                touched[`reps-${levelIdx}-${setIdx}`] &&
+                                ((set as StrengthSetForm).reps === '' ||
+                                  Number.isNaN(Number((set as StrengthSetForm).reps)) ||
+                                  Number((set as StrengthSetForm).reps) <= 0)
+                                  ? 'border-red-500 dark:border-red-400'
+                                  : 'border-slate-300 dark:border-slate-600'
+                              }`}
                             />
                           </label>
-                          <label className="flex items-center gap-1">
+                          <label className="flex flex-col gap-0.5">
                             <span className="text-xs text-slate-500 whitespace-nowrap">
                               {t('common.weight')}
                             </span>
