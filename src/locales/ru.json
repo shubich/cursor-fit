@@ -14,7 +14,9 @@
     "name": "Название",
     "level": "Уровень",
     "weight": "Вес",
-    "home": "Главная"
+    "home": "Главная",
+    "themeLight": "Светлая",
+    "themeDark": "Тёмная"
   },
   "home": {
     "title": "Cursor Fit",

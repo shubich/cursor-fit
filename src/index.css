@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   font-family: system-ui, -apple-system, sans-serif;
   line-height: 1.5;
@@ -12,10 +14,8 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #e2e8f0;
-  }
+html.dark :root {
+  color: #e2e8f0;
 }
 
 body {
@@ -26,10 +26,8 @@ body {
   background-color: #e2e8f0;
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #1e293b;
-  }
+html.dark body {
+  background-color: #1e293b;
 }
 
 #root {
@@ -40,8 +38,6 @@ body {
   background-color: #f8fafc;
 }
 
-@media (prefers-color-scheme: dark) {
-  #root {
-    background-color: #0f172a;
-  }
+html.dark #root {
+  background-color: #0f172a;
 }

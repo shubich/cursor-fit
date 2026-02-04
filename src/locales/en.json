@@ -14,7 +14,9 @@
     "name": "Name",
     "level": "Level",
     "weight": "Weight",
-    "home": "Home"
+    "home": "Home",
+    "themeLight": "Light",
+    "themeDark": "Dark"
   },
   "home": {
     "title": "Cursor Fit",

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useStore } from './store'
 import { Home } from './components/Home'
@@ -8,6 +8,59 @@ import { SessionList } from './components/SessionList'
 import { SessionCreator } from './components/SessionCreator'
 import { ActiveWorkoutScreen } from './components/ActiveWorkoutScreen'
 import { ResultsScreen } from './components/ResultsScreen'
+
+const THEME_STORAGE_KEY = 'cursor-fit:theme'
+
+function ThemeSwitcher() {
+  const { t } = useTranslation()
+  const [isDark, setIsDark] = useState(() =>
+    document.documentElement.classList.contains('dark')
+  )
+
+  useEffect(() => {
+    const root = document.documentElement
+    const observer = new MutationObserver(() => {
+      setIsDark(root.classList.contains('dark'))
+    })
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
+
+  const setTheme = (dark: boolean) => {
+    const value = dark ? 'dark' : 'light'
+    localStorage.setItem(THEME_STORAGE_KEY, value)
+    if (dark) document.documentElement.classList.add('dark')
+    else document.documentElement.classList.remove('dark')
+    setIsDark(dark)
+  }
+
+  return (
+    <div className="flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 p-0.5 dark:border-slate-600 dark:bg-slate-800">
+      <button
+        type="button"
+        onClick={() => setTheme(false)}
+        className={`rounded-md px-2 py-1 text-sm font-medium transition-colors ${
+          !isDark
+            ? 'bg-white text-slate-900 shadow dark:bg-slate-700 dark:text-white'
+            : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+        }`}
+      >
+        {t('common.themeLight')}
+      </button>
+      <button
+        type="button"
+        onClick={() => setTheme(true)}
+        className={`rounded-md px-2 py-1 text-sm font-medium transition-colors ${
+          isDark
+            ? 'bg-white text-slate-900 shadow dark:bg-slate-700 dark:text-white'
+            : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+        }`}
+      >
+        {t('common.themeDark')}
+      </button>
+    </div>
+  )
+}
 
 function LanguageSwitcher() {
   const { i18n } = useTranslation()
@@ -74,6 +127,7 @@ function App() {
   return (
     <div className="flex min-h-[100dvh] flex-col">
       <header className="flex shrink-0 items-center justify-end gap-2 border-b border-slate-200 px-4 py-2 dark:border-slate-700">
+        <ThemeSwitcher />
         <LanguageSwitcher />
       </header>
       <main className="flex min-h-0 flex-1 flex-col">{content}</main>
