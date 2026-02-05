@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
-import { render, screen, resetStore, waitFor, fireEvent } from '../test/test-utils'
+import { render, screen, resetStore, fireEvent } from '../test/test-utils'
 import { ActiveWorkoutScreen } from './ActiveWorkoutScreen'
 import { useStore } from '../store'
 
