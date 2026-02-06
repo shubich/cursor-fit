@@ -35,6 +35,8 @@ export function ActiveWorkoutScreen() {
   const [showQuitConfirm, setShowQuitConfirm] = useState(false)
   const [cardioRemaining, setCardioRemaining] = useState<number | null>(null)
   const cardioCountdownCleanup = useRef<(() => void) | null>(null)
+  const setsContainerRef = useRef<HTMLDivElement>(null)
+  const activeSetRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!activeWorkout) return
@@ -45,6 +47,18 @@ export function ActiveWorkoutScreen() {
     // Only reset when current set or exercise changes, not on every store update
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeWorkout?.currentExerciseIndex, activeWorkout?.currentSet])
+
+  // Auto-scroll to active set on mount/set change
+  useEffect(() => {
+    const scrollToActive = () => {
+      if (activeSetRef.current) {
+        activeSetRef.current.scrollIntoView({ inline: 'center', block: 'nearest' })
+      }
+    }
+    // Use double rAF to ensure layout is complete
+    const id = requestAnimationFrame(() => requestAnimationFrame(scrollToActive))
+    return () => cancelAnimationFrame(id)
+  }, [activeWorkout?.currentSet])
 
   if (!activeWorkout) {
     return (
@@ -227,7 +241,8 @@ export function ActiveWorkoutScreen() {
           <p className="mb-2 font-medium text-slate-500 dark:text-slate-400">
             {t('workout.allSetsTitle')}
           </p>
-          <div className="flex items-start justify-center gap-1">
+          <div ref={setsContainerRef} className="overflow-x-auto">
+            <div className="inline-flex items-start gap-1 whitespace-nowrap">
             {allSets.map((set, index) => {
               const setNumber = index + 1
               const isCurrent = setNumber === activeWorkout.currentSet
@@ -244,7 +259,7 @@ export function ActiveWorkoutScreen() {
                 : null
 
               return (
-                <div key={index} className="flex items-start">
+                <div key={index} ref={isCurrent ? activeSetRef : undefined} className="flex items-start">
                   {index > 0 && (
                     <span className="mx-2 text-slate-300 dark:text-slate-600">|</span>
                   )}
@@ -263,6 +278,7 @@ export function ActiveWorkoutScreen() {
                 </div>
               )
             })}
+            </div>
           </div>
         </div>
 
