@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useStore } from './store'
 import { Home } from './components/Home'
+import { TimerScreen } from './components/TimerScreen'
+import { StopwatchScreen } from './components/StopwatchScreen'
 import { ExerciseList } from './components/ExerciseList'
 import { ExerciseForm } from './components/ExerciseForm'
 import { SessionList } from './components/SessionList'
@@ -105,6 +107,10 @@ function App() {
     switch (screen) {
       case 'home':
         return <Home />
+      case 'timer':
+        return <TimerScreen />
+      case 'stopwatch':
+        return <StopwatchScreen />
       case 'exercises':
         return <ExerciseList />
       case 'exercise-create':

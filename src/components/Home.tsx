@@ -18,6 +18,12 @@ export function Home() {
         <Button variant="nav" onClick={() => setScreen('sessions')}>
           {t('home.sessions')}
         </Button>
+        <Button variant="nav" onClick={() => setScreen('stopwatch')}>
+          {t('home.stopwatch')}
+        </Button>
+        <Button variant="nav" onClick={() => setScreen('timer')}>
+          {t('home.timer')}
+        </Button>
       </div>
     </div>
   )

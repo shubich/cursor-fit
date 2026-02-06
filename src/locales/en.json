@@ -22,7 +22,9 @@
     "title": "Cursor Fit",
     "subtitle": "Manage exercises, create sessions, and run workouts. All data is stored on this device.",
     "exercises": "Exercises",
-    "sessions": "Sessions"
+    "sessions": "Sessions",
+    "timer": "Timer",
+    "stopwatch": "Stopwatch"
   },
   "exercises": {
     "title": "Exercises",
@@ -117,5 +119,23 @@
     "setIndex": "Set {{index}}",
     "repsCount": "{{count}} reps",
     "finish": "Finish"
+  },
+  "timer": {
+    "title": "Timer",
+    "start": "Start",
+    "pause": "Pause",
+    "reset": "Reset",
+    "cancel": "Cancel",
+    "done": "Done!",
+    "setTime": "Set time",
+    "min": "min"
+  },
+  "stopwatch": {
+    "title": "Stopwatch",
+    "start": "Start",
+    "stop": "Stop",
+    "reset": "Reset",
+    "lap": "Lap",
+    "lapNumber": "Lap {{n}}"
   }
 }

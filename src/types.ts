@@ -109,6 +109,8 @@ export interface WorkoutResult {
 /** App screen / route. */
 export type AppScreen =
   | 'home'
+  | 'timer'
+  | 'stopwatch'
   | 'exercises'
   | 'exercise-edit'
   | 'exercise-create'
