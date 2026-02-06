@@ -59,6 +59,10 @@ export function ActiveWorkoutScreen() {
   const totalSets = getLevelSetsCount(exercise, level)
   const levelInfo = getCurrentSetInfo(exercise, level, activeWorkout.currentSet)
   const isSession = activeWorkout.exercises.length > 1
+  
+  // Get all sets for this level
+  const levelData = exercise.levels.find((l) => l.level === level)
+  const allSets = levelData?.sets ?? []
 
   const handleRestComplete = () => restComplete()
   const closeQuitModal = () => setShowQuitConfirm(false)
@@ -174,6 +178,7 @@ export function ActiveWorkoutScreen() {
           {t('workout.setOf', { current: activeWorkout.currentSet, total: totalSets })}
         </p>
 
+        {/* Current set display */}
         <div className="rounded-xl bg-slate-100 p-6 text-center dark:bg-slate-800">
           {exercise.isCardio ? (
             cardioRemaining === null ? (
@@ -211,12 +216,59 @@ export function ActiveWorkoutScreen() {
         </div>
 
         <p className="text-center text-sm text-slate-500 dark:text-slate-400">
-          {t('workout.restAfterSet', { seconds: formatSeconds(exercise.restBetweenSets) })}
+          {t('workout.restAfterSet')}{' '}
+          <span className="font-semibold text-slate-700 dark:text-slate-200">
+            {formatSeconds(exercise.restBetweenSets)}
+          </span>
         </p>
+
+        {/* All sets overview */}
+        <div className="mt-auto text-sm rounded-xl bg-slate-100 p-4 text-center dark:bg-slate-800">
+          <p className="mb-2 font-medium text-slate-500 dark:text-slate-400">
+            {t('workout.allSetsTitle')}
+          </p>
+          <div className="flex items-start justify-center gap-1">
+            {allSets.map((set, index) => {
+              const setNumber = index + 1
+              const isCurrent = setNumber === activeWorkout.currentSet
+              const isCompleted = setNumber <= completedSets
+              const reps = 'reps' in set ? set.reps : null
+              const duration = 'duration' in set ? set.duration : null
+              const weight = 'weight' in set ? set.weight : null
+              const hasWeight = weight !== null && weight !== undefined && weight !== 'bodyweight' && weight !== 0
+              const baseValue = exercise.isCardio
+                ? duration != null ? formatSeconds(duration) : '—'
+                : reps ?? '—'
+              const weightLabel = hasWeight
+                ? typeof weight === 'number' ? t('workout.weightKg', { n: weight }) : weight
+                : null
+
+              return (
+                <div key={index} className="flex items-start">
+                  {index > 0 && (
+                    <span className="mx-2 text-slate-300 dark:text-slate-600">|</span>
+                  )}
+                  <div
+                    className={`flex flex-col items-center tabular-nums ${
+                      isCurrent
+                        ? 'font-bold text-slate-900 dark:text-white'
+                        : isCompleted
+                          ? 'text-slate-400 line-through dark:text-slate-500'
+                          : 'text-slate-500 dark:text-slate-400'
+                    }`}
+                  >
+                    <span>{baseValue} {t('workout.reps')}</span>
+                    {weightLabel && <span>{weightLabel}</span>}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
 
         {exercise.isCardio ? (
           cardioRemaining === null ? (
-            <div className="mt-auto flex flex-col gap-2">
+            <div className="flex flex-col gap-2">
               <Button
                 variant="primary"
                 size="lg"
@@ -235,7 +287,7 @@ export function ActiveWorkoutScreen() {
               variant="secondary"
               size="lg"
               fullWidth
-              className="mt-auto active:scale-[0.98]"
+              className="active:scale-[0.98]"
               onClick={handleCardioCompleteEarly}
             >
               {t('workout.completeEarly')}
@@ -246,7 +298,7 @@ export function ActiveWorkoutScreen() {
             variant="primary"
             size="lg"
             fullWidth
-            className="mt-auto active:scale-[0.98]"
+            className="active:scale-[0.98]"
             onClick={completeSet}
           >
             {t('workout.completeSet')}
