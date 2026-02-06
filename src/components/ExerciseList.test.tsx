@@ -22,18 +22,15 @@ describe('ExerciseList', () => {
     expect(useStore.getState().editingExerciseId).toBeNull()
   })
 
-  it('lists exercises and Back to home navigates', async () => {
+  it('lists exercises', () => {
     useStore.getState().addExercise({
       name: 'Push-ups',
       restBetweenSets: 60,
       isCardio: false,
       levels: [{ level: 1, sets: [{ reps: 8, weight: 'bodyweight' }] }],
     })
-    const user = userEvent.setup()
     render(<ExerciseList />)
     expect(screen.getByText('Push-ups')).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: /back to home/i }))
-    expect(useStore.getState().screen).toBe('home')
   })
 
   it('Edit navigates to exercise-edit with id', async () => {

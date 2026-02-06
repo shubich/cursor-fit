@@ -138,10 +138,6 @@ export function ExerciseList() {
         </ul>
       )}
 
-      <Button variant="secondary" onClick={() => setScreen('home')}>
-        {t('common.back')}
-      </Button>
-
       <Modal
         open={exerciseToDeleteId != null}
         onClose={() => setExerciseToDeleteId(null)}

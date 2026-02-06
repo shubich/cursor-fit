@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useStore } from '../store'
 import { startCountdown, formatSeconds } from '../timer-utils'
 import { playBeep } from '../sound'
-import { Button } from './ui'
 
 type TimerState = 'idle' | 'running' | 'paused' | 'done'
 
@@ -21,7 +19,6 @@ const PRESETS = [
 
 export function TimerScreen() {
   const { t } = useTranslation()
-  const setScreen = useStore((s) => s.setScreen)
 
   const [duration, setDuration] = useState(300) // 5 minutes default
   const [remaining, setRemaining] = useState(300)
@@ -95,16 +92,9 @@ export function TimerScreen() {
 
   return (
     <div className="flex flex-1 flex-col">
-      {/* Header */}
-      <div className="flex items-center gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-700">
-        <Button variant="ghost" size="sm" onClick={() => setScreen('home')}>
-          ← {t('common.home')}
-        </Button>
-        <h1 className="text-lg font-semibold text-slate-900 dark:text-white">
-          {t('timer.title')}
-        </h1>
+      <div className="p-4">
+        <h1 className="text-center text-2xl font-bold text-slate-900 dark:text-white">{t('timer.title')}</h1>
       </div>
-
       <div className="flex flex-1 flex-col items-center justify-center gap-8 p-6">
         {/* Preset buttons */}
         <div className="flex flex-wrap justify-center gap-2">

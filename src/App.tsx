@@ -10,6 +10,7 @@ import { SessionList } from './components/SessionList'
 import { SessionCreator } from './components/SessionCreator'
 import { ActiveWorkoutScreen } from './components/ActiveWorkoutScreen'
 import { ResultsScreen } from './components/ResultsScreen'
+import { Button } from './components/ui'
 
 const THEME_STORAGE_KEY = 'cursor-fit:theme'
 
@@ -96,12 +97,23 @@ function LanguageSwitcher() {
 }
 
 function App() {
+  const { t } = useTranslation()
   const screen = useStore((s) => s.screen)
+  const setScreen = useStore((s) => s.setScreen)
+  const setShowQuitConfirm = useStore((s) => s.setShowQuitConfirm)
   const load = useStore((s) => s.load)
 
   useEffect(() => {
     load()
   }, [load])
+
+  const handleHomeClick = () => {
+    if (screen === 'workout') {
+      setShowQuitConfirm(true)
+    } else {
+      setScreen('home')
+    }
+  }
 
   const content = (() => {
     switch (screen) {
@@ -132,9 +144,16 @@ function App() {
 
   return (
     <div className="flex min-h-[100dvh] flex-col">
-      <header className="flex shrink-0 items-center justify-end gap-2 border-b border-slate-200 px-4 py-2 dark:border-slate-700">
-        <ThemeSwitcher />
-        <LanguageSwitcher />
+      <header className="flex shrink-0 items-center gap-2 border-b border-slate-200 px-4 py-2 dark:border-slate-700">
+        {screen !== 'home' && (
+          <Button variant="ghost" size="sm" onClick={handleHomeClick}>
+            ← {t('common.home')}
+          </Button>
+        )}
+        <div className="ml-auto flex items-center gap-2">
+          <ThemeSwitcher />
+          <LanguageSwitcher />
+        </div>
       </header>
       <main className="flex min-h-0 flex-1 flex-col">{content}</main>
     </div>

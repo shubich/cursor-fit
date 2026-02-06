@@ -32,7 +32,8 @@ export function ActiveWorkoutScreen() {
   const completeSet = useStore((s) => s.completeSet)
   const restComplete = useStore((s) => s.restComplete)
   const quitWorkout = useStore((s) => s.quitWorkout)
-  const [showQuitConfirm, setShowQuitConfirm] = useState(false)
+  const showQuitConfirm = useStore((s) => s.showQuitConfirm)
+  const setShowQuitConfirm = useStore((s) => s.setShowQuitConfirm)
   const [cardioRemaining, setCardioRemaining] = useState<number | null>(null)
   const cardioCountdownCleanup = useRef<(() => void) | null>(null)
   const setsContainerRef = useRef<HTMLDivElement>(null)
@@ -51,7 +52,7 @@ export function ActiveWorkoutScreen() {
   // Auto-scroll to active set on mount/set change
   useEffect(() => {
     const scrollToActive = () => {
-      if (activeSetRef.current) {
+      if (activeSetRef.current?.scrollIntoView) {
         activeSetRef.current.scrollIntoView({ inline: 'center', block: 'nearest' })
       }
     }
@@ -123,14 +124,9 @@ export function ActiveWorkoutScreen() {
             onRestComplete={handleRestComplete}
             nextLabel={t('workout.nextExercise')}
           />
-          <div className="flex gap-2">
-            <Button variant="secondary" size="md" className="flex-1" onClick={handleRestComplete}>
-              {t('workout.skipRest')}
-            </Button>
-            <Button variant="danger" size="md" onClick={() => setShowQuitConfirm(true)}>
-              {t('workout.quitWorkout')}
-            </Button>
-          </div>
+          <Button variant="secondary" size="md" fullWidth onClick={handleRestComplete}>
+            {t('workout.skipRest')}
+          </Button>
         </div>
         <Modal
           open={showQuitConfirm}
@@ -157,21 +153,16 @@ export function ActiveWorkoutScreen() {
   return (
     <>
       <div className="flex min-h-0 flex-1 flex-col gap-6 p-4 pb-8">
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0 flex-1 text-center">
-            {isSession && (
-              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                {t('workout.exerciseOf', {
-                  current: activeWorkout.currentExerciseIndex + 1,
-                  total: activeWorkout.exercises.length,
-                })}
-              </p>
-            )}
-            <h1 className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">{exercise.name}</h1>
-          </div>
-          <Button variant="ghost" size="sm" onClick={() => setShowQuitConfirm(true)}>
-            {t('common.quit')}
-          </Button>
+        <div className="text-center">
+          {isSession && (
+            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+              {t('workout.exerciseOf', {
+                current: activeWorkout.currentExerciseIndex + 1,
+                total: activeWorkout.exercises.length,
+              })}
+            </p>
+          )}
+          <h1 className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">{exercise.name}</h1>
         </div>
 
         <div className="flex justify-center gap-2">

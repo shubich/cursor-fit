@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useStore } from '../store'
-import { Button } from './ui'
 
 interface Lap {
   number: number
@@ -30,7 +28,6 @@ function formatLapTime(ms: number): string {
 
 export function StopwatchScreen() {
   const { t } = useTranslation()
-  const setScreen = useStore((s) => s.setScreen)
 
   const [elapsed, setElapsed] = useState(0)
   const [isRunning, setIsRunning] = useState(false)
@@ -106,17 +103,10 @@ export function StopwatchScreen() {
 
   return (
     <div className="flex flex-1 flex-col">
-      {/* Header */}
-      <div className="flex items-center gap-3 border-b border-slate-200 px-4 py-3 dark:border-slate-700">
-        <Button variant="ghost" size="sm" onClick={() => setScreen('home')}>
-          ← {t('common.home')}
-        </Button>
-        <h1 className="text-lg font-semibold text-slate-900 dark:text-white">
-          {t('stopwatch.title')}
-        </h1>
+      <div className="p-4">
+        <h1 className="text-center text-2xl font-bold text-slate-900 dark:text-white">{t('stopwatch.title')}</h1>
       </div>
-
-      <div className="flex flex-1 flex-col items-center gap-6 p-6">
+      <div className="flex min-h-0 flex-1 flex-col items-center gap-6 p-6">
         {/* Time display */}
         <div className="flex items-center justify-center py-8">
           <span className="text-5xl font-bold tabular-nums text-slate-900 dark:text-white sm:text-6xl">
@@ -164,8 +154,8 @@ export function StopwatchScreen() {
 
         {/* Lap list */}
         {laps.length > 0 && (
-          <div className="mt-4 w-full max-w-sm flex-1 overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
-            <div className="max-h-64 overflow-y-auto">
+          <div className="min-h-0 w-full max-w-sm flex-1 overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
+            <div className="h-full overflow-y-auto">
               {laps.map((lapItem) => (
                 <div
                   key={lapItem.number}

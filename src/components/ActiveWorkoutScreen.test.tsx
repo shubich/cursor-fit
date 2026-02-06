@@ -59,7 +59,7 @@ describe('ActiveWorkoutScreen', () => {
     expect(screen.getByText(/set 2 of 2/i)).toBeInTheDocument()
   })
 
-  it('Quit opens modal and Quit workout clears workout', async () => {
+  it('Quit modal opens via store and Quit workout clears workout', async () => {
     useStore.getState().addExercise({
       name: 'Push-ups',
       restBetweenSets: 60,
@@ -68,9 +68,9 @@ describe('ActiveWorkoutScreen', () => {
     })
     const exId = useStore.getState().exercises[0].id
     useStore.getState().startSingleExerciseWorkout(exId, 1)
+    useStore.getState().setShowQuitConfirm(true)
     const user = userEvent.setup()
     render(<ActiveWorkoutScreen />)
-    await user.click(screen.getByRole('button', { name: /quit/i }))
     expect(screen.getByRole('dialog')).toBeInTheDocument()
     expect(screen.getByText(/progress will not be saved/i)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /quit workout/i }))
@@ -87,9 +87,9 @@ describe('ActiveWorkoutScreen', () => {
     })
     const exId = useStore.getState().exercises[0].id
     useStore.getState().startSingleExerciseWorkout(exId, 1)
+    useStore.getState().setShowQuitConfirm(true)
     const user = userEvent.setup()
     render(<ActiveWorkoutScreen />)
-    await user.click(screen.getByRole('button', { name: /quit/i }))
     await user.click(screen.getByRole('button', { name: /cancel/i }))
     expect(useStore.getState().activeWorkout).not.toBeNull()
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()

@@ -116,10 +116,6 @@ export function SessionList() {
         </ul>
       )}
 
-      <Button variant="secondary" onClick={() => setScreen('home')}>
-        {t('common.back')}
-      </Button>
-
       <Modal
         open={sessionToDeleteId != null}
         onClose={() => setSessionToDeleteId(null)}

@@ -46,10 +46,12 @@ interface AppState {
   lastResult: WorkoutResult | null
   editingExerciseId: string | null
   editingSessionId: string | null
+  showQuitConfirm: boolean
 }
 
 interface AppActions {
   setScreen: (screen: AppScreen) => void
+  setShowQuitConfirm: (show: boolean) => void
   load: () => void
 
   // Exercises
@@ -99,8 +101,10 @@ export const useStore = create<Store>((set, get) => ({
   lastResult: null,
   editingExerciseId: null,
   editingSessionId: null,
+  showQuitConfirm: false,
 
   setScreen: (screen) => set({ screen }),
+  setShowQuitConfirm: (show) => set({ showQuitConfirm: show }),
 
   load: () => {
     set({
