@@ -25,7 +25,8 @@
     "sessions": "Sessions",
     "timer": "Timer",
     "stopwatch": "Stopwatch",
-    "history": "History"
+    "history": "History",
+    "settings": "Settings"
   },
   "exercises": {
     "title": "Exercises",
@@ -133,6 +134,19 @@
     "clearHistoryMessage": "All workout history will be removed. Are you sure?",
     "deleteTitle": "Delete workout?",
     "deleteMessage": "This workout record will be removed. Are you sure?"
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": "Theme",
+    "language": "Language",
+    "sound": "Sound",
+    "timer": "Timer",
+    "stopwatch": "Stopwatch",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "clearAllData": "Clear all data",
+    "clearAllDataTitle": "Clear all data?",
+    "clearAllDataMessage": "All exercises, sessions, history, and settings will be removed. This cannot be undone."
   },
   "timer": {
     "title": "Timer",

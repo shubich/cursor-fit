@@ -19,6 +19,7 @@ export const STORAGE_KEYS = {
   exercises: `${PREFIX}:exercises`,
   sessions: `${PREFIX}:sessions`,
   workoutHistory: `${PREFIX}:workout-history`,
+  settings: `${PREFIX}:settings`,
 } as const
 
 function safeParse<T>(key: string, fallback: T): T {
@@ -101,4 +102,26 @@ export function saveWorkoutResult(result: WorkoutResult): void {
 
 export function saveWorkoutHistory(history: WorkoutResult[]): void {
   safeSet(STORAGE_KEYS.workoutHistory, history)
+}
+
+// --- Settings ---
+
+export interface AppSettings {
+  soundEnabled: boolean
+  timerEnabled: boolean
+  stopwatchEnabled: boolean
+}
+
+const DEFAULT_SETTINGS: AppSettings = {
+  soundEnabled: true,
+  timerEnabled: true,
+  stopwatchEnabled: true,
+}
+
+export function loadSettings(): AppSettings {
+  return { ...DEFAULT_SETTINGS, ...safeParse<Partial<AppSettings>>(STORAGE_KEYS.settings, {}) }
+}
+
+export function saveSettings(settings: AppSettings): void {
+  safeSet(STORAGE_KEYS.settings, settings)
 }

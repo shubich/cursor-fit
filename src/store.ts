@@ -20,6 +20,8 @@ import {
   loadWorkoutHistory,
   saveWorkoutResult,
   saveWorkoutHistory,
+  loadSettings,
+  saveSettings,
 } from './storage'
 import type { StrengthExercise, CardioExercise, StrengthLevel, CardioLevel } from './types'
 
@@ -48,6 +50,9 @@ interface AppState {
   editingExerciseId: string | null
   editingSessionId: string | null
   showQuitConfirm: boolean
+  soundEnabled: boolean
+  timerEnabled: boolean
+  stopwatchEnabled: boolean
 }
 
 interface AppActions {
@@ -80,6 +85,10 @@ interface AppActions {
   clearLastResult: () => void
   clearWorkoutHistory: () => void
   deleteWorkoutResult: (id: string) => void
+  setSoundEnabled: (enabled: boolean) => void
+  setTimerEnabled: (enabled: boolean) => void
+  setStopwatchEnabled: (enabled: boolean) => void
+  clearAllData: () => void
 }
 
 export type Store = AppState & AppActions
@@ -105,15 +114,22 @@ export const useStore = create<Store>((set, get) => ({
   editingExerciseId: null,
   editingSessionId: null,
   showQuitConfirm: false,
+  soundEnabled: true,
+  timerEnabled: true,
+  stopwatchEnabled: true,
 
   setScreen: (screen) => set({ screen }),
   setShowQuitConfirm: (show) => set({ showQuitConfirm: show }),
 
   load: () => {
+    const settings = loadSettings()
     set({
       exercises: loadExercises(),
       sessions: loadSessions(),
       workoutHistory: loadWorkoutHistory(),
+      soundEnabled: settings.soundEnabled,
+      timerEnabled: settings.timerEnabled,
+      stopwatchEnabled: settings.stopwatchEnabled,
     })
   },
 
@@ -361,6 +377,38 @@ export const useStore = create<Store>((set, get) => ({
     const next = get().workoutHistory.filter((r) => r.id !== id)
     set({ workoutHistory: next })
     saveWorkoutHistory(next)
+  },
+  setSoundEnabled: (enabled) => {
+    set({ soundEnabled: enabled })
+    const s = get()
+    saveSettings({ soundEnabled: s.soundEnabled, timerEnabled: s.timerEnabled, stopwatchEnabled: s.stopwatchEnabled })
+  },
+  setTimerEnabled: (enabled) => {
+    set({ timerEnabled: enabled })
+    const s = get()
+    saveSettings({ soundEnabled: s.soundEnabled, timerEnabled: s.timerEnabled, stopwatchEnabled: s.stopwatchEnabled })
+  },
+  setStopwatchEnabled: (enabled) => {
+    set({ stopwatchEnabled: enabled })
+    const s = get()
+    saveSettings({ soundEnabled: s.soundEnabled, timerEnabled: s.timerEnabled, stopwatchEnabled: s.stopwatchEnabled })
+  },
+  clearAllData: () => {
+    localStorage.clear()
+    set({
+      screen: 'home',
+      exercises: [],
+      sessions: [],
+      workoutHistory: [],
+      activeWorkout: null,
+      lastResult: null,
+      editingExerciseId: null,
+      editingSessionId: null,
+      showQuitConfirm: false,
+      soundEnabled: true,
+      timerEnabled: true,
+      stopwatchEnabled: true,
+    })
   },
 }))
 

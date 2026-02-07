@@ -122,3 +122,4 @@ export type AppScreen =
   | 'workout'
   | 'results'
   | 'history'
+  | 'settings'

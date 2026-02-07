@@ -2,6 +2,8 @@
  * Play a short beep using Web Audio API (no asset required).
  */
 
+import { useStore } from './store'
+
 let audioContext: AudioContext | null = null
 
 function getContext(): AudioContext | null {
@@ -16,6 +18,7 @@ function getContext(): AudioContext | null {
 }
 
 export function playBeep(): void {
+  if (!useStore.getState().soundEnabled) return
   const ctx = getContext()
   if (!ctx) return
   const osc = ctx.createOscillator()
