@@ -1,4 +1,10 @@
 {
+  "defaults": {
+    "pushUps": "Push-ups",
+    "squats": "Squats",
+    "abs": "Abs",
+    "pullUps": "Pull-ups"
+  },
   "common": {
     "cancel": "Cancel",
     "save": "Save",

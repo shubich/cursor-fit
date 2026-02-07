@@ -4,6 +4,7 @@
 
 import type {
   Exercise,
+  StrengthExercise,
   Session,
   WorkoutResult,
   StrengthLevel,
@@ -11,6 +12,7 @@ import type {
   StrengthSet,
   CardioSet,
 } from './types'
+import i18n from './i18n'
 type Weight = number | string
 
 const PREFIX = 'cursor-fit'
@@ -66,11 +68,97 @@ function migrateExercise(ex: unknown): Exercise {
   return { ...rest, levels } as Exercise
 }
 
+// --- Default exercises (seeded on first launch) ---
+
+const s = (reps: number) => ({ reps, weight: 0 })
+
+function getDefaultExercises(): Exercise[] {
+  const pushUps: StrengthExercise = {
+    id: 'default-push-ups',
+    name: i18n.t('defaults.pushUps'),
+    restBetweenSets: 100,
+    isCardio: false,
+    levels: [
+      { level: 1,  sets: [s(20), s(20), s(15), s(15), s(10)] },
+      { level: 2,  sets: [s(25), s(25), s(20), s(15), s(10)] },
+      { level: 3,  sets: [s(30), s(30), s(25), s(20), s(15)] },
+      { level: 4,  sets: [s(35), s(30), s(25), s(20), s(15)] },
+      { level: 5,  sets: [s(40), s(35), s(25), s(25), s(15)] },
+      { level: 6,  sets: [s(40), s(40), s(30), s(30), s(20)] },
+      { level: 7,  sets: [s(45), s(40), s(35), s(35), s(25)] },
+      { level: 8,  sets: [s(45), s(45), s(35), s(35), s(25)] },
+      { level: 9,  sets: [s(50), s(45), s(35), s(35), s(30)] },
+      { level: 10, sets: [s(50), s(50), s(40), s(40), s(35)] },
+    ],
+  }
+  const squats: StrengthExercise = {
+    id: 'default-squats',
+    name: i18n.t('defaults.squats'),
+    restBetweenSets: 60,
+    isCardio: false,
+    levels: [
+      { level: 1,  sets: [s(8),  s(10), s(8),  s(8),  s(6)]  },
+      { level: 2,  sets: [s(10), s(12), s(10), s(10), s(8)]  },
+      { level: 3,  sets: [s(10), s(15), s(12), s(12), s(10)] },
+      { level: 4,  sets: [s(15), s(15), s(15), s(15), s(12)] },
+      { level: 5,  sets: [s(15), s(20), s(18), s(16), s(12)] },
+      { level: 6,  sets: [s(15), s(20), s(20), s(20), s(15)] },
+      { level: 7,  sets: [s(20), s(25), s(20), s(20), s(20)] },
+      { level: 8,  sets: [s(20), s(25), s(25), s(25), s(20)] },
+      { level: 9,  sets: [s(25), s(30), s(30), s(25), s(20)] },
+      { level: 10, sets: [s(25), s(30), s(30), s(30), s(25)] },
+    ],
+  }
+  const abs: StrengthExercise = {
+    id: 'default-abs',
+    name: i18n.t('defaults.abs'),
+    restBetweenSets: 5,
+    isCardio: false,
+    levels: [
+      { level: 1,  sets: [s(5),  s(10), s(5),  s(5),  s(5)]  },
+      { level: 2,  sets: [s(6),  s(11), s(6),  s(6),  s(6)]  },
+      { level: 3,  sets: [s(7),  s(12), s(7),  s(7),  s(7)]  },
+      { level: 4,  sets: [s(8),  s(13), s(8),  s(8),  s(8)]  },
+      { level: 5,  sets: [s(9),  s(14), s(9),  s(9),  s(9)]  },
+      { level: 6,  sets: [s(10), s(15), s(10), s(10), s(10)] },
+      { level: 7,  sets: [s(11), s(16), s(11), s(11), s(11)] },
+      { level: 8,  sets: [s(12), s(17), s(12), s(12), s(12)] },
+      { level: 9,  sets: [s(13), s(18), s(13), s(13), s(13)] },
+      { level: 10, sets: [s(14), s(19), s(14), s(14), s(14)] },
+    ],
+  }
+  const pullUps: StrengthExercise = {
+    id: 'default-pull-ups',
+    name: i18n.t('defaults.pullUps'),
+    restBetweenSets: 120,
+    isCardio: false,
+    levels: [
+      { level: 1,  sets: [s(6),  s(5), s(5), s(4), s(3)] },
+      { level: 2,  sets: [s(7),  s(6), s(5), s(4), s(4)] },
+      { level: 3,  sets: [s(8),  s(6), s(5), s(5), s(4)] },
+      { level: 4,  sets: [s(8),  s(7), s(5), s(5), s(5)] },
+      { level: 5,  sets: [s(9),  s(7), s(6), s(5), s(5)] },
+      { level: 6,  sets: [s(10), s(7), s(6), s(6), s(5)] },
+      { level: 7,  sets: [s(10), s(8), s(6), s(6), s(6)] },
+      { level: 8,  sets: [s(11), s(8), s(7), s(6), s(6)] },
+      { level: 9,  sets: [s(12), s(8), s(7), s(7), s(6)] },
+      { level: 10, sets: [s(12), s(9), s(7), s(7), s(7)] },
+    ],
+  }
+  return [pushUps, squats, abs, pullUps]
+}
+
 // --- Exercises ---
 
 export function loadExercises(): Exercise[] {
-  const raw = safeParse<unknown[]>(STORAGE_KEYS.exercises, [])
-  return raw.map(migrateExercise) as Exercise[]
+  const raw = localStorage.getItem(STORAGE_KEYS.exercises)
+  if (raw == null) {
+    // First launch — seed defaults
+    const defaults = getDefaultExercises()
+    safeSet(STORAGE_KEYS.exercises, defaults)
+    return defaults
+  }
+  return safeParse<unknown[]>(STORAGE_KEYS.exercises, []).map(migrateExercise) as Exercise[]
 }
 
 export function saveExercises(exercises: Exercise[]): void {

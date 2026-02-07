@@ -16,8 +16,29 @@ beforeEach(() => {
 
 describe('storage', () => {
   describe('exercises', () => {
-    it('loadExercises returns empty array when nothing stored', () => {
-      expect(loadExercises()).toEqual([])
+    it('loadExercises returns default exercises when nothing stored', () => {
+      const exercises = loadExercises()
+      expect(exercises).toHaveLength(4)
+
+      expect(exercises[0].id).toBe('default-push-ups')
+      expect(exercises[0].name).toBe('Push-ups')
+      expect(exercises[0].levels).toHaveLength(10)
+      expect(exercises[0].restBetweenSets).toBe(100)
+
+      expect(exercises[1].id).toBe('default-squats')
+      expect(exercises[1].name).toBe('Squats')
+      expect(exercises[1].levels).toHaveLength(10)
+      expect(exercises[1].restBetweenSets).toBe(60)
+
+      expect(exercises[2].id).toBe('default-abs')
+      expect(exercises[2].name).toBe('Abs')
+      expect(exercises[2].levels).toHaveLength(10)
+      expect(exercises[2].restBetweenSets).toBe(5)
+
+      expect(exercises[3].id).toBe('default-pull-ups')
+      expect(exercises[3].name).toBe('Pull-ups')
+      expect(exercises[3].levels).toHaveLength(10)
+      expect(exercises[3].restBetweenSets).toBe(120)
     })
 
     it('saveExercises and loadExercises round-trip', () => {
