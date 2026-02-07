@@ -13,6 +13,7 @@ import { ResultsScreen } from './components/ResultsScreen'
 import { HistoryScreen } from './components/HistoryScreen'
 import { SettingsScreen } from './components/SettingsScreen'
 import { Button } from './components/ui'
+import { ChevronLeft } from 'lucide-react'
 
 function App() {
   const { t } = useTranslation()
@@ -74,7 +75,7 @@ function App() {
             onClick={handleHomeClick}
             className={screen === 'home' ? 'invisible' : ''}
           >
-            ←
+            <ChevronLeft className="h-4 w-4" />
           </Button>
         </div>
         <h1 className="flex-1 text-center text-lg font-semibold text-slate-900 dark:text-white">

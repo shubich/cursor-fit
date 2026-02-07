@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useStore } from '../store'
 import { Button, Card, Modal } from './ui'
+import { ChevronDown } from 'lucide-react'
 
 export function SessionList() {
   const { t } = useTranslation()
@@ -77,12 +78,10 @@ export function SessionList() {
                       </p>
                     )}
                   </div>
-                  <span
-                    className={`inline-block shrink-0 text-slate-500 transition-transform dark:text-slate-400 ${isExpanded ? 'rotate-180' : ''}`}
+                  <ChevronDown
+                    className={`h-4 w-4 shrink-0 text-slate-500 transition-transform dark:text-slate-400 ${isExpanded ? 'rotate-180' : ''}`}
                     aria-hidden
-                  >
-                    ▾
-                  </span>
+                  />
                 </button>
                 {isExpanded && (
                   <>
