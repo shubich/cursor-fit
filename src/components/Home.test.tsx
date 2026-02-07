@@ -9,10 +9,11 @@ beforeEach(() => {
 })
 
 describe('Home', () => {
-  it('renders title and description', () => {
+  it('renders description and nav items', () => {
     render(<Home />)
-    expect(screen.getByRole('heading', { name: /cursor fit/i })).toBeInTheDocument()
     expect(screen.getByText(/manage exercises/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /exercises/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /sessions/i })).toBeInTheDocument()
   })
 
   it('navigates to exercises when Exercises is clicked', async () => {
