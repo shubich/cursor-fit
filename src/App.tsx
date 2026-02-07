@@ -68,22 +68,19 @@ function App() {
     <div className="flex min-h-[100dvh] flex-col">
       <header className="flex shrink-0 items-center border-b border-slate-200 px-4 py-2 dark:border-slate-700">
         <div className="w-16">
-          {screen !== 'home' && (
-            <Button variant="ghost" size="sm" onClick={handleHomeClick}>
-              ←
-            </Button>
-          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleHomeClick}
+            className={screen === 'home' ? 'invisible' : ''}
+          >
+            ←
+          </Button>
         </div>
         <h1 className="flex-1 text-center text-lg font-semibold text-slate-900 dark:text-white">
           {t('home.title')}
         </h1>
-        <div className="flex w-16 justify-end">
-          {screen === 'home' && (
-            <Button variant="ghost" size="sm" onClick={() => setScreen('settings')}>
-              ⚙
-            </Button>
-          )}
-        </div>
+        <div className="w-16" />
       </header>
       <main className="flex min-h-0 flex-1 flex-col">{content}</main>
     </div>
