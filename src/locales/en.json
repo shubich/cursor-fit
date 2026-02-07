@@ -127,7 +127,12 @@
   "history": {
     "title": "History",
     "noHistory": "No workouts yet.",
-    "exercises": "exercises"
+    "exercises": "exercises",
+    "clearHistory": "Clear history",
+    "clearHistoryTitle": "Clear history?",
+    "clearHistoryMessage": "All workout history will be removed. Are you sure?",
+    "deleteTitle": "Delete workout?",
+    "deleteMessage": "This workout record will be removed. Are you sure?"
   },
   "timer": {
     "title": "Timer",

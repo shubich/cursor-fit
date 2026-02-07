@@ -98,3 +98,7 @@ export function saveWorkoutResult(result: WorkoutResult): void {
   // Keep last 100 results
   safeSet(STORAGE_KEYS.workoutHistory, history.slice(0, 100))
 }
+
+export function saveWorkoutHistory(history: WorkoutResult[]): void {
+  safeSet(STORAGE_KEYS.workoutHistory, history)
+}

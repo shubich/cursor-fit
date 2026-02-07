@@ -19,6 +19,7 @@ import {
   saveSessions,
   loadWorkoutHistory,
   saveWorkoutResult,
+  saveWorkoutHistory,
 } from './storage'
 import type { StrengthExercise, CardioExercise, StrengthLevel, CardioLevel } from './types'
 
@@ -77,6 +78,8 @@ interface AppActions {
   finishWorkout: () => void
   quitWorkout: () => void
   clearLastResult: () => void
+  clearWorkoutHistory: () => void
+  deleteWorkoutResult: (id: string) => void
 }
 
 export type Store = AppState & AppActions
@@ -350,6 +353,15 @@ export const useStore = create<Store>((set, get) => ({
 
   quitWorkout: () => set({ activeWorkout: null, screen: 'home' }),
   clearLastResult: () => set({ lastResult: null }),
+  clearWorkoutHistory: () => {
+    set({ workoutHistory: [] })
+    saveWorkoutHistory([])
+  },
+  deleteWorkoutResult: (id) => {
+    const next = get().workoutHistory.filter((r) => r.id !== id)
+    set({ workoutHistory: next })
+    saveWorkoutHistory(next)
+  },
 }))
 
 // Helpers for forms (create default level with 3 sets)

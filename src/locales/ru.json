@@ -127,7 +127,12 @@
   "history": {
     "title": "История",
     "noHistory": "Тренировок пока нет.",
-    "exercises": "упражнений"
+    "exercises": "упражнений",
+    "clearHistory": "Очистить историю",
+    "clearHistoryTitle": "Очистить историю?",
+    "clearHistoryMessage": "Вся история тренировок будет удалена. Вы уверены?",
+    "deleteTitle": "Удалить тренировку?",
+    "deleteMessage": "Запись о тренировке будет удалена. Вы уверены?"
   },
   "timer": {
     "title": "Таймер",
