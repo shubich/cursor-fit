@@ -84,6 +84,7 @@ export interface ActiveWorkout {
   restEndsAt: number | null
   isRestBetweenExercises: boolean
   restBetweenExercises: number
+  sessionName?: string
 }
 
 /** Single completed set log. */
@@ -104,6 +105,7 @@ export interface WorkoutResult {
   totalDurationSeconds: number
   completedSets: CompletedSet[]
   exerciseNames: string[]
+  sessionName?: string
 }
 
 /** App screen / route. */
@@ -119,3 +121,4 @@ export type AppScreen =
   | 'session-edit'
   | 'workout'
   | 'results'
+  | 'history'

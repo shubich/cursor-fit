@@ -24,7 +24,8 @@
     "exercises": "Exercises",
     "sessions": "Sessions",
     "timer": "Timer",
-    "stopwatch": "Stopwatch"
+    "stopwatch": "Stopwatch",
+    "history": "History"
   },
   "exercises": {
     "title": "Exercises",
@@ -122,6 +123,11 @@
     "setIndex": "Set {{index}}",
     "repsCount": "{{count}} reps",
     "finish": "Finish"
+  },
+  "history": {
+    "title": "History",
+    "noHistory": "No workouts yet.",
+    "exercises": "exercises"
   },
   "timer": {
     "title": "Timer",

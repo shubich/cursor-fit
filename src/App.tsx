@@ -10,6 +10,7 @@ import { SessionList } from './components/SessionList'
 import { SessionCreator } from './components/SessionCreator'
 import { ActiveWorkoutScreen } from './components/ActiveWorkoutScreen'
 import { ResultsScreen } from './components/ResultsScreen'
+import { HistoryScreen } from './components/HistoryScreen'
 import { Button } from './components/ui'
 
 const THEME_STORAGE_KEY = 'cursor-fit:theme'
@@ -137,6 +138,8 @@ function App() {
         return <ActiveWorkoutScreen />
       case 'results':
         return <ResultsScreen />
+      case 'history':
+        return <HistoryScreen />
       default:
         return <Home />
     }

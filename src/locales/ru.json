@@ -24,7 +24,8 @@
     "exercises": "Упражнения",
     "sessions": "Тренировки",
     "timer": "Таймер",
-    "stopwatch": "Секундомер"
+    "stopwatch": "Секундомер",
+    "history": "История"
   },
   "exercises": {
     "title": "Упражнения",
@@ -122,6 +123,11 @@
     "setIndex": "Подход {{index}}",
     "repsCount": "{{count}} повтор.",
     "finish": "Готово"
+  },
+  "history": {
+    "title": "История",
+    "noHistory": "Тренировок пока нет.",
+    "exercises": "упражнений"
   },
   "timer": {
     "title": "Таймер",

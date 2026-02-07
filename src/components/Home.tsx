@@ -24,6 +24,9 @@ export function Home() {
         <Button variant="nav" onClick={() => setScreen('timer')}>
           {t('home.timer')}
         </Button>
+        <Button variant="nav" onClick={() => setScreen('history')}>
+          {t('home.history')}
+        </Button>
       </div>
     </div>
   )

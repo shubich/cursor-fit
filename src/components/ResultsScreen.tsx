@@ -2,46 +2,26 @@ import { useTranslation } from 'react-i18next'
 import { useStore } from '../store'
 import { formatSeconds } from '../timer-utils'
 import { Button, Card } from './ui'
+import type { WorkoutResult } from '../types'
 
-export function ResultsScreen() {
+export function ResultDetails({ result }: { result: WorkoutResult }) {
   const { t } = useTranslation()
-  const lastResult = useStore((s) => s.lastResult)
-  const setScreen = useStore((s) => s.setScreen)
-  const clearLastResult = useStore((s) => s.clearLastResult)
 
-  const handleFinish = () => {
-    clearLastResult()
-    setScreen('home')
-  }
-
-  if (!lastResult) {
-    return (
-      <div className="p-4">
-        <p>{t('results.noResults')}</p>
-        <Button variant="secondary" className="mt-2" onClick={() => setScreen('home')}>
-          {t('common.home')}
-        </Button>
-      </div>
-    )
-  }
-
-  const byExercise = lastResult.completedSets.reduce(
+  const byExercise = result.completedSets.reduce(
     (acc, set) => {
       if (!acc[set.exerciseName]) acc[set.exerciseName] = []
       acc[set.exerciseName].push(set)
       return acc
     },
-    {} as Record<string, typeof lastResult.completedSets>
+    {} as Record<string, typeof result.completedSets>
   )
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-6 p-4 pb-8">
-      <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t('results.title')}</h1>
-
+    <>
       <div className="rounded-xl bg-emerald-100 p-4 dark:bg-emerald-900/30">
         <p className="text-sm font-medium text-emerald-800 dark:text-emerald-200">{t('results.totalTime')}</p>
         <p className="text-3xl font-bold text-emerald-900 dark:text-emerald-100">
-          {formatSeconds(lastResult.totalDurationSeconds)}
+          {formatSeconds(result.totalDurationSeconds)}
         </p>
       </div>
 
@@ -67,6 +47,37 @@ export function ResultsScreen() {
           ))}
         </ul>
       </div>
+    </>
+  )
+}
+
+export function ResultsScreen() {
+  const { t } = useTranslation()
+  const lastResult = useStore((s) => s.lastResult)
+  const setScreen = useStore((s) => s.setScreen)
+  const clearLastResult = useStore((s) => s.clearLastResult)
+
+  const handleFinish = () => {
+    clearLastResult()
+    setScreen('home')
+  }
+
+  if (!lastResult) {
+    return (
+      <div className="p-4">
+        <p>{t('results.noResults')}</p>
+        <Button variant="secondary" className="mt-2" onClick={() => setScreen('home')}>
+          {t('common.home')}
+        </Button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex min-h-0 flex-1 flex-col gap-6 p-4 pb-8">
+      <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t('results.title')}</h1>
+
+      <ResultDetails result={lastResult} />
 
       <Button
         variant="primary"

@@ -199,6 +199,7 @@ export const useStore = create<Store>((set, get) => ({
       restEndsAt: null,
       isRestBetweenExercises: false,
       restBetweenExercises: session.restBetweenExercises,
+      sessionName: session.name,
     }
     set({ activeWorkout: active, screen: 'workout' })
   },
@@ -336,11 +337,13 @@ export const useStore = create<Store>((set, get) => ({
       totalDurationSeconds: Math.round((Date.now() - w.startedAt) / 1000),
       completedSets,
       exerciseNames: [...new Set(w.exercises.map((e) => e.exercise.name))],
+      sessionName: w.sessionName,
     }
     saveWorkoutResult(result)
     set({
       activeWorkout: null,
       lastResult: result,
+      workoutHistory: [result, ...get().workoutHistory].slice(0, 100),
       screen: 'results',
     })
   },
