@@ -49,6 +49,13 @@ export function ActiveWorkoutScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeWorkout?.currentExerciseIndex, activeWorkout?.currentSet])
 
+  // Cleanup cardio countdown on unmount
+  useEffect(() => {
+    return () => {
+      cardioCountdownCleanup.current?.()
+    }
+  }, [])
+
   // Auto-scroll to active set on mount/set change
   useEffect(() => {
     const scrollToActive = () => {
